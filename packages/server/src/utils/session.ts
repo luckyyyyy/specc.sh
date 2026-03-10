@@ -35,8 +35,12 @@ export const resolveSessionUserId = async (
 };
 
 const buildCookieHeader = (value: string, maxAge: number): string => {
-  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
-  return `${SESSION_COOKIE_NAME}=${value}; HttpOnly; SameSite=Lax; Max-Age=${maxAge}; Path=/${secure}`;
+  // Production: API and Web may be on different domains — SameSite=None + Secure is required
+  // for cross-origin requests (e.g. credentials: "include"). Development keeps Lax (no HTTPS).
+  const isProduction = process.env.NODE_ENV === "production";
+  const secure = isProduction ? "; Secure" : "";
+  const sameSite = isProduction ? "None" : "Lax";
+  return `${SESSION_COOKIE_NAME}=${value}; HttpOnly; SameSite=${sameSite}; Max-Age=${maxAge}; Path=/${secure}`;
 };
 
 export const setSessionCookie = (resHeaders: Headers, sessionId: string) => {

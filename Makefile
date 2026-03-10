@@ -7,9 +7,9 @@
 .DEFAULT_GOAL := help
 
 # 镜像名称
-SERVER_IMAGE := ai-stack-server
-WEB_IMAGE := ai-stack-web
-MIGRATE_IMAGE := ai-stack-server-migrate
+SERVER_IMAGE := specc-server
+WEB_IMAGE := specc-web
+MIGRATE_IMAGE := specc-server-migrate
 COMPOSE_FILE := docker-compose.yml
 
 # 颜色输出
@@ -88,9 +88,9 @@ init: ## 首次初始化项目（安装依赖+启动服务+同步Schema）
 
 dev: ## 启动开发环境（数据库+开发服务器）
 	@printf "$(GREEN)🚀 启动开发环境...$(NC)\n"
-	@docker-compose up -d db minio
+	@docker-compose up -d db minio redis
 	@docker-compose run --rm minio-init 2>/dev/null || true
-	@printf "$(GREEN)✓ 数据库和 MinIO 已启动$(NC)\n"
+	@printf "$(GREEN)✓ 数据库、MinIO 和 Redis 已启动$(NC)\n"
 	@printf "$(YELLOW)启动开发服务器...$(NC)\n"
 	@pnpm dev
 

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { UserMenu } from "@/components/account";
 import { useAuth, useLang, useTheme } from "@/hooks";
+import { trpc } from "@/lib/trpc";
 
 function SunIcon() {
   return (
@@ -71,23 +72,34 @@ function GitHubIcon() {
 export function LandingHeader() {
   const { t } = useTranslation();
   const { theme, themeMode, setThemeMode } = useTheme();
-  const { user, updateUser, logout } = useAuth();
+  const { user, isAuthed, updateUser, logout } = useAuth();
   const { lang, setLangMode } = useLang();
+
+  const updateProfile = trpc.user.updateProfile.useMutation({
+    onSuccess: updateUser,
+  });
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   const toggleTheme = () => {
-    setThemeMode(
+    const newMode =
       themeMode === "dark" || (themeMode === "auto" && theme === "dark")
         ? "light"
-        : "dark",
-    );
+        : "dark";
+    setThemeMode(newMode);
+    if (isAuthed) {
+      updateProfile.mutate({ settings: { themeMode: newMode } });
+    }
   };
 
   const toggleLang = () => {
-    setLangMode(lang === "zh" ? "en" : "zh");
+    const newMode = lang === "zh" ? "en" : "zh";
+    setLangMode(newMode);
+    if (isAuthed) {
+      updateProfile.mutate({ settings: { langMode: newMode } });
+    }
   };
 
   const isDark = theme === "dark";
@@ -119,7 +131,9 @@ export function LandingHeader() {
 
           {/* Center nav */}
           <nav className="hidden md:flex items-center gap-1">
-            {(["features", "howItWorks", "techStack"] as const).map((key) => (
+            {(
+              ["features", "howItWorks", "techStack", "quickStart"] as const
+            ).map((key) => (
               <button
                 key={key}
                 type="button"
@@ -156,7 +170,7 @@ export function LandingHeader() {
 
             {/* GitHub */}
             <a
-              href="https://github.com"
+              href="https://github.com/luckyyyyy/specc.sh"
               target="_blank"
               rel="noreferrer"
               className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer transition-colors"
@@ -178,6 +192,7 @@ export function LandingHeader() {
                   onUpdateUser={updateUser}
                   onLogout={logout}
                   showDashboardLink
+                  glassy
                 />
               </>
             ) : (

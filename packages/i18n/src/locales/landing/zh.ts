@@ -5,6 +5,7 @@ export const landingZh = {
       features: "核心优势",
       howItWorks: "工作原理",
       techStack: "技术栈",
+      quickStart: "快速安装",
       github: "GitHub",
       getStarted: "开始使用",
       dashboard: "进入控制台",
@@ -29,7 +30,7 @@ export const landingZh = {
     features: {
       sectionTitle: "为什么你需要这个模板",
       sectionSubtitle:
-        "Vibe Coding 让 AI 随意发挥，结果一团乱麻。Spec Coding 给 AI 规范和约束——这个模板就是 Spec，让它每次都写出生产级代码",
+        "Vibe Coding 让 AI 随意发挥，结果一团乱麻。Spec Coding 不一样：架构本身就是提示词，根本不需要写文档。目录结构、类型、Lint 规则直接告诉 AI 该怎么做——每次都输出生产级代码",
       items: {
         typeSafe: {
           title: "驯服 AI 的输出",
@@ -207,6 +208,32 @@ export const landingZh = {
         desc: "默认 TailwindCSS 4，美观又标准化。不满意？让 AI 帮你换成任何 UI 框架，架构不受影响",
       },
     },
+    // Why Vibe Coding Fails
+    whyVibeFails: {
+      badge: "核心问题",
+      sectionTitle: "为什么普通人这么难驾驭 Vibe Coding？",
+      sectionSubtitle:
+        "所有人都试过。AI 几秒钟写出几百行代码，看起来很厉害。然后你一运行——崩了。这不是运气差，是结构性问题。",
+      reasonsTitle: "根本原因",
+      reasons: {
+        noSpec: {
+          title: "没有项目级规范",
+          desc: "AI 不知道你的目录约定、命名规则、架构决策。它只能猜——而且每次猜的都不一样。",
+        },
+        noConstraints: {
+          title: "没有强制约束",
+          desc: "没有 Lint 规则、类型 Schema、输出契约的硬性约束，AI 就会自由发挥，写出一团风格各异的乱麻。",
+        },
+        noLanguage: {
+          title: "没有共同语言",
+          desc: "你的 AI 工具根本不知道「生产级」对你的项目意味着什么，除非你明确告诉它——每次会话都从零开始。",
+        },
+      },
+      result: "结果就是：今天能跑，明天报错，后天没人敢动。",
+      callout: "问题不在 AI，在于它没有可以读懂的结构。",
+      solution:
+        "SPECC.SH 通过架构来解决这个问题，而不是靠文档。目录布局、类型 Schema、Lint 规则、模块边界本身就是提示词——AI 打开代码库就能读懂并遵守，无需任何解释。",
+    },
     // Why Not Next.js
     whyNotNextjs: {
       badge: "为什么不用 Next.js？",
@@ -230,7 +257,8 @@ export const landingZh = {
         },
       },
       solutionTitle: "用对工具，解决真实问题",
-      solutionSubtitle: "业务上需要 SEO 的地方用 SSR，用户需要极速响应的地方用 CSR",
+      solutionSubtitle:
+        "业务上需要 SEO 的地方用 SSR，用户需要极速响应的地方用 CSR",
       ssr: {
         title: "官网 / 营销页 — 服务端渲染 SSR",
         desc: "React Router v7 SSR via Hono，首屏秒开，完整 SEO 索引——搜索引擎能抓到，用户愿意信任它",
@@ -241,6 +269,23 @@ export const landingZh = {
       },
       clarification:
         "两种模式共存于同一套代码库，按路由灵活切换渲染策略——不绑定框架，不依赖 Vercel，任何平台随便部署",
+    },
+    // Quick Start
+    quickStart: {
+      sectionTitle: "一键安装，60 秒跑起来",
+      sectionSubtitle:
+        "无需手动配置环境——一行命令克隆模板、安装依赖、启动服务，开箱即用",
+      copied: "已复制！",
+      copyTooltip: "复制命令",
+      prereqTitle: "前置条件",
+      prereqs: {
+        node: "Node.js 20+",
+        docker: "Docker",
+        pnpm: "pnpm 9+",
+      },
+      terminalTitle: "终端安装",
+      orFork: "或者直接在 GitHub 上 Fork",
+      forkBtn: "Fork 模板",
     },
     // Footer
     footer: {

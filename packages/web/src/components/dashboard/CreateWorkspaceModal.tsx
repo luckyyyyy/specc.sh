@@ -1,6 +1,6 @@
 import { Button, Input, Modal } from "@specc/components";
 import { slugify } from "@specc/types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { message } from "@/lib/message";
 import { trpc } from "@/lib/trpc";
@@ -35,16 +35,15 @@ export default function CreateWorkspaceModal({
     },
   });
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setName("");
     setSlug("");
     setSlugEdited(false);
     setDescription("");
-  };
+  }, []);
 
   useEffect(() => {
     if (!open) reset();
-    // biome-ignore lint/correctness/useExhaustiveDependencies: reset is intentionally excluded to avoid infinite loop
   }, [open, reset]);
 
   const handleNameChange = (v: string) => {

@@ -30,7 +30,7 @@ pnpm --filter @specc/server db:generate  # regenerate Prisma client after schema
 #### Query local DB (one-liner)
 
 ```sh
-docker exec -it ai-stack-postgres psql -U postgres -d ai_stack_db -c "SELECT * FROM users LIMIT 10;"
+docker exec -it ai-stack-postgres psql -U postgres -d specc -c "SELECT * FROM users LIMIT 10;"
 ```
 
 ## Critical Rules

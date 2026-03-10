@@ -1,106 +1,83 @@
-# specc.sh
+<div align="center">
 
-> **Spec Coding beats Vibe Coding.**
-> A full-stack AI template that gives your Claude Code / Copilot / Cursor / Codex a spec to follow — so it produces production-grade code every time.
+# SPECC.SH
 
-[中文文档](./README.zh.md) · [Demo](https://specc.sh) · [GitHub](https://github.com/luckyyyyy/specc.sh)
+### The End of Handwritten Code
+
+**Your AI Writes**
+**You Ship**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Demo](https://img.shields.io/badge/Demo-specc.sh-green)](https://specc.sh)
+
+[中文文档](./README.zh.md) · [Live Demo](https://specc.sh) · [GitHub](https://github.com/luckyyyyy/specc.sh)
+
+</div>
 
 ---
 
-## One-Line Setup
+## Why Is Vibe Coding So Hard to Get Right?
 
-```bash
-curl -fsSL https://specc.sh/install.sh | bash
+Everyone's tried it. You open Claude Code or Cursor, describe what you want, and watch the AI write hundreds of lines in seconds. It looks impressive. Then you run it — and it breaks.
+
+This isn't bad luck. It's structural.
+
+**The real reasons your AI-generated code falls short:**
+
+- **No project-level spec** — The AI doesn't know your folder conventions, naming patterns, or architecture decisions. It guesses, and guesses differently every time.
+- **No enforced constraints** — Without lint rules, type schemas, and output contracts baked into the project, the AI freestyle-codes its way into an inconsistent mess.
+- **No shared language** — Your AI tool has no idea what "production-grade" means *for your project* unless you tell it explicitly.
+
+The result: code that compiles on Monday, breaks on Tuesday, and is impossible to extend by Friday.
+
+> The problem isn't the AI. It's the absence of a spec the AI can follow.
+
+SPECC.SH solves this at the architecture level. There's no separate doc to write or maintain. The folder structure, type schemas, lint rules, and module contracts **are** the prompt — the codebase itself tells AI exactly what to do, every time.
+
+---
+
+## Why SPECC.SH?
+
+You've probably tried **Vibe Coding** — typing prompts into Claude Code, Cursor, or Copilot and hoping for the best. Sometimes it works. Often it doesn't. The AI writes code that doesn't compile, ignores your conventions, or breaks something else.
+
+**The problem isn't the AI. It's the lack of a spec.**
+
+SPECC.SH is a full-stack template where the architecture itself is the prompt. The folder structure, type system, module boundaries, and lint rules tell AI exactly what to do — no separate documentation required. When your AI opens this codebase, it stops guessing and starts following the structure — producing code that compiles, passes lint, and ships to production on the first try.
+
+> **Vibe Coding** = AI freestyles → inconsistent mess
+> **Spec Coding** = AI follows your spec → production-grade output
+
+---
+
+## How It Works (No Coding Required)
+
+```
+1. Clone this template
+2. Open your AI tool (Claude Code, Cursor, Copilot, Codex...)
+3. Describe what you want to build in plain language
+4. AI generates the code — guided by the built-in spec
+5. Run: make lint && make tsc
+6. Ship
 ```
 
-Or clone manually:
+The architecture is the prompt. Every folder, type contract, and lint rule tells AI what to do — consistent, type-safe, lint-passing code on the first try. No manual review needed.
+
+---
+
+## Quick Start
+
+```bash
+curl -fsSL https://specc.sh | bash
+```
+
+Or manually:
 
 ```bash
 git clone https://github.com/luckyyyyy/specc.sh.git
 cd specc.sh
-make init
+make init   # install deps + start Docker services + sync DB
+make dev    # start everything
 ```
-
----
-
-## What Is specc.sh?
-
-**Vibe Coding** lets AI freestyle — the result is a mess.
-**Spec Coding** gives AI rules and constraints — this template _is_ the spec.
-
-specc.sh is a production-ready TypeScript monorepo template designed for AI-assisted development. Point any AI tool at the `.github/copilot-instructions.md` and the custom instructions, and it will generate code that compiles, passes lint, and ships to production — without a single manual review of types or style.
-
-**Built on:**
-- `packages/server` — Hono + tRPC + Prisma ORM + PostgreSQL 18
-- `packages/web` — React 19 + Vite 7 + TailwindCSS 4 + TanStack Query v5
-- `packages/types` — Shared Zod v4 schemas + TypeScript types
-- `packages/components` — Reusable UI design system
-- `packages/i18n` — i18n locale resources (EN + ZH out of the box)
-
----
-
-## Prerequisites
-
-| Tool | Version | Notes |
-|------|---------|-------|
-| [Docker](https://docs.docker.com/get-docker/) | 24+ | Required for PostgreSQL + MinIO |
-| [Node.js](https://nodejs.org/) | 20+ | LTS recommended |
-| [pnpm](https://pnpm.io/installation) | 10+ | `npm install -g pnpm` |
-
-### Windows (WSL2)
-
-Windows users **must** run inside WSL2. Native Windows (CMD/PowerShell) is not supported.
-
-1. Install WSL2: open PowerShell as Administrator and run:
-   ```powershell
-   wsl --install
-   ```
-2. Install [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) and enable **"Use the WSL 2 based engine"** in settings.
-3. Open your WSL2 terminal (Ubuntu recommended) and follow the **Linux** steps below.
-
-### macOS
-
-```bash
-# Install Homebrew if needed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install Node.js and pnpm
-brew install node
-npm install -g pnpm
-
-# Install Docker Desktop
-# Download from https://docs.docker.com/desktop/install/mac-install/
-```
-
-### Linux
-
-```bash
-# Ubuntu / Debian
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-npm install -g pnpm
-
-# Install Docker
-# Follow https://docs.docker.com/engine/install/ubuntu/
-```
-
----
-
-## Getting Started
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/luckyyyyy/specc.sh.git
-cd specc.sh
-
-# 2. Initialize the project (installs deps, starts Docker services, syncs DB schema)
-make init
-
-# 3. Start the development server
-make dev
-```
-
-After `make dev`:
 
 | Service | URL |
 |---------|-----|
@@ -110,86 +87,143 @@ After `make dev`:
 
 ---
 
-## Available Commands
+## What's Inside
 
-| Command | Description |
-|---------|-------------|
-| `make init` | First-time setup: install deps, start services, sync DB schema |
-| `make dev` | Start development environment (DB + dev servers) |
-| `make build` | Build production bundles |
-| `make docker` | Build all Docker images |
-| `make prod` | Build images and start the full production stack |
-| `make lint` | Biome lint check |
-| `make tsc` | TypeScript type check across all packages |
-
-### Database
-
-```bash
-pnpm --filter @specc/server db:push      # Sync schema to DB (dev, no migration files)
-pnpm --filter @specc/server db:migrate   # Create + apply migration files (production)
-pnpm --filter @specc/server db:generate  # Regenerate Prisma client after schema change
-```
-
----
-
-## Project Structure
+A production-ready TypeScript monorepo — batteries included:
 
 ```
 specc.sh/
 ├── packages/
-│   ├── server/        # Hono + tRPC + Prisma (backend)
-│   ├── web/           # React 19 + Vite 7 (frontend)
-│   ├── types/         # Zod v4 schemas (shared)
+│   ├── server/        # Hono + tRPC + Prisma + PostgreSQL 18
+│   ├── web/           # React 19 + Vite 7 + TailwindCSS 4
+│   ├── types/         # Shared Zod v4 schemas
 │   ├── components/    # UI design system
-│   └── i18n/          # i18n locale resources
+│   └── i18n/          # EN + ZH out of the box
 ├── docker-compose.yml
 ├── Makefile
 └── .github/
-    └── copilot-instructions.md   # ← The spec AI reads
+    └── copilot-instructions.md   ← Architecture rules, not docs
 ```
 
----
+### Everything pre-wired, so you just describe features:
 
-## Key Features
-
-- **End-to-End Type Safety** — tRPC + Zod v4 full-chain inference. Compiler catches every AI mistake instantly.
-- **Works with Any AI Tool** — Claude Code, Copilot, Cursor, Codex, Gemini CLI, GLM, Qwen. The spec lives in the template, not the tool.
-- **Multi-Tenant Out of the Box** — Workspace isolation + session auth + invite system + role-based permissions.
-- **i18n Out of the Box** — React i18next pre-configured with EN/ZH. Add new locales with zero component changes.
-- **Multi-Theme Out of the Box** — Light / dark / system modes, CSS variable-driven.
-- **Biome Linting** — Rust-powered lint replaces ESLint + Prettier. `make lint` always passes.
-- **Zero-Coupling Modules** — Routing, auth, storage, and UI are all independently replaceable.
-- **S3-Compatible Storage** — MinIO locally, swap to AWS S3 or Alibaba Cloud OSS via env vars.
+| What you get | Detail |
+|---|---|
+| **Auth + Sessions** | Login, register, cookie sessions |
+| **Multi-Tenant Workspaces** | Isolation, invites, role-based access |
+| **File Storage** | MinIO locally → swap to S3 / OSS via env |
+| **i18n** | EN / ZH, add more locales with zero component changes |
+| **Dark / Light / System Theme** | CSS variable-driven |
+| **End-to-End Type Safety** | tRPC + Zod — compiler catches AI mistakes instantly |
 
 ---
 
-## How AI Coding Works With This Template
+## For Non-Programmers: What You Actually Do
 
-1. **Describe what you want** in plain language to your AI tool.
-2. **AI generates standardized code** — schema, tRPC router, React component — all following template conventions enforced by `.github/copilot-instructions.md`.
-3. **Run `make lint && make tsc`** — any non-compliant output fails instantly. No manual review needed.
-4. **Ship.** Type-safe, zero runtime errors, lint passes — code quality rivals handcrafted work.
+You don't write code. You talk to AI. Here's the loop:
+
+**1. Tell the AI what you want**
+> *"Add a feature where users can create projects with a name and description"*
+
+**2. AI writes the code** following the spec — schema, API, UI, all wired up
+
+**3. You verify it works**
+```bash
+make lint && make tsc   # if green, the code is correct
+make dev                # open browser, test it yourself
+```
+
+**4. Done. Ship it.**
+
+The spec ensures AI-generated code is consistent every single time, even across different AI tools.
+
+---
+
+## Works With Any AI Tool
+
+The spec in `.github/copilot-instructions.md` works with:
+
+- **Claude Code** (recommended)
+- **GitHub Copilot**
+- **Cursor**
+- **Codex / ChatGPT**
+- **Gemini CLI**
+- **Qwen / GLM / any LLM**
+
+The intelligence is in the architecture, not the tool.
+
+---
+
+## Prerequisites
+
+| Tool | Version | Install |
+|------|---------|---------|
+| [Docker](https://docs.docker.com/get-docker/) | 24+ | Required for DB + storage |
+| [Node.js](https://nodejs.org/) | 20+ | `brew install node` or apt |
+| [pnpm](https://pnpm.io/installation) | 10+ | `npm install -g pnpm` |
+
+<details>
+<summary>Windows (WSL2)</summary>
+
+Windows users **must** run inside WSL2.
+
+1. Open PowerShell as Administrator: `wsl --install`
+2. Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/) → enable "Use the WSL 2 based engine"
+3. Open your WSL2 terminal and follow the Linux steps
+
+</details>
+
+<details>
+<summary>macOS</summary>
+
+```bash
+brew install node
+npm install -g pnpm
+# Install Docker Desktop from https://docs.docker.com/desktop/install/mac-install/
+```
+
+</details>
+
+<details>
+<summary>Linux (Ubuntu / Debian)</summary>
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm install -g pnpm
+# Install Docker: https://docs.docker.com/engine/install/ubuntu/
+```
+
+</details>
+
+---
+
+## Commands
+
+| Command | What it does |
+|---------|-------------|
+| `make init` | First-time setup |
+| `make dev` | Start dev environment |
+| `make build` | Build for production |
+| `make lint` | Check code quality |
+| `make tsc` | Check types |
+| `make prod` | Build + start production stack |
 
 ---
 
 ## Environment Variables
 
-Copy the example files and edit as needed:
-
 ```bash
-cp .env.example .env
 cp packages/server/.env.example packages/server/.env
 cp packages/web/.env.example packages/web/.env
 ```
 
-Key variables:
-
-| Variable | Location | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | `packages/server/.env` | PostgreSQL connection string |
-| `STORAGE_ENDPOINT` | `packages/server/.env` | S3/MinIO endpoint |
-| `VITE_TRPC_URL` | `packages/web/.env` | tRPC API endpoint (frontend) |
-| `VITE_STORAGE_PUBLIC_URL` | `packages/web/.env` | Public storage URL prefix |
+| Variable | Where | Description |
+|----------|-------|-------------|
+| `DATABASE_URL` | `server/.env` | PostgreSQL connection |
+| `STORAGE_ENDPOINT` | `server/.env` | S3 / MinIO endpoint |
+| `VITE_TRPC_URL` | `web/.env` | API endpoint |
+| `VITE_STORAGE_PUBLIC_URL` | `web/.env` | Public file URL prefix |
 
 ---
 
@@ -197,19 +231,14 @@ Key variables:
 
 | Layer | Technology |
 |-------|-----------|
-| Backend framework | [Hono](https://hono.dev/) |
-| API layer | [tRPC v11](https://trpc.io/) |
-| ORM | [Prisma](https://www.prisma.io/) |
-| Database | PostgreSQL 18 |
-| Frontend framework | React 19 |
-| Build tool | Vite 7 |
+| Backend | [Hono](https://hono.dev/) + [tRPC v11](https://trpc.io/) |
+| Database | PostgreSQL 18 + [Prisma ORM](https://www.prisma.io/) |
+| Frontend | React 19 + [Vite 7](https://vite.dev/) |
 | Styling | TailwindCSS 4 |
-| Data fetching | TanStack Query v5 |
-| Schema validation | Zod v4 |
-| Linting | Biome |
-| Package manager | pnpm (workspaces) |
-| Object storage | MinIO (S3-compatible) |
-| Cache / rate-limit | Redis 7 |
+| Validation | Zod v4 |
+| Storage | MinIO (S3-compatible) |
+| Cache | Redis 7 |
+| Lint | Biome |
 
 ---
 

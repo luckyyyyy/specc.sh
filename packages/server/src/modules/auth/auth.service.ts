@@ -1,22 +1,29 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-import { slugify } from "@specc/types";
+import { randomBytes, scrypt, timingSafeEqual } from "node:crypto";
+import { promisify } from "node:util";
 import { db } from "@/db/client";
+
+const scryptAsync = promisify(scrypt);
+
 import { type Language, t } from "@/i18n";
-import { toUserOutput } from "@/modules/user/user.mapper";
-import { userService } from "@/modules/user/user.service";
-import { workspaceService } from "@/modules/workspace/workspace.service";
+import { toUserOutput, userService } from "@/modules/user";
+import { workspaceService } from "@/modules/workspace";
 import { AppError } from "@/trpc/errors";
 
-const hashPassword = (password: string): string => {
+const hashPassword = async (password: string): Promise<string> => {
   const salt = randomBytes(16).toString("hex");
-  const hash = scryptSync(password, salt, 64).toString("hex");
+  const hash = ((await scryptAsync(password, salt, 64)) as Buffer).toString(
+    "hex",
+  );
   return `${salt}:${hash}`;
 };
 
-export const verifyPassword = (password: string, stored: string): boolean => {
+export const verifyPassword = async (
+  password: string,
+  stored: string,
+): Promise<boolean> => {
   const [salt, hash] = stored.split(":");
   if (!salt || !hash) return false;
-  const derived = scryptSync(password, salt, 64);
+  const derived = (await scryptAsync(password, salt, 64)) as Buffer;
   return timingSafeEqual(Buffer.from(hash, "hex"), derived);
 };
 
@@ -28,12 +35,13 @@ export class AuthService {
   }
 
   async deleteSession(sessionId: string) {
-    await db.session.delete({ where: { id: sessionId } });
+    await db.session.deleteMany({ where: { id: sessionId } });
   }
 
   async login(email: string, password: string) {
     const user = await userService.getByEmail(email);
-    if (!user || !verifyPassword(password, user.passwordHash)) return null;
+    if (!user || !(await verifyPassword(password, user.passwordHash)))
+      return null;
     const defaultWorkspaceSlug = await workspaceService.getDefaultSlugForUser(
       user.id,
     );
@@ -50,42 +58,31 @@ export class AuthService {
 
     const name = input.email.split("@")[0] ?? input.email;
     const workspaceName = `${name}${t(language, "workspace.defaultNameSuffix")}`;
-    const baseSlug = slugify(workspaceName) || "workspace";
-    const workspaceSlug = await workspaceService.ensureUniqueSlug(baseSlug);
+    const passwordHash = await hashPassword(input.password);
 
-    const result = await db.$transaction(async (tx) => {
-      const createdUser = await tx.user.create({
-        data: {
+    return db.$transaction(async (tx) => {
+      const user = await userService.create(
+        {
           name,
           email: input.email,
-          passwordHash: hashPassword(input.password),
-          role: "user",
+          passwordHash,
         },
-      });
-
-      const createdWorkspace = await tx.workspace.create({
-        data: {
-          slug: workspaceSlug,
+        tx,
+      );
+      const workspace = await workspaceService.create(
+        {
           name: workspaceName,
           description: t(language, "workspace.defaultDesc"),
         },
-      });
+        user.id,
+        tx,
+      );
 
-      await tx.workspaceMember.create({
-        data: {
-          workspaceId: createdWorkspace.id,
-          userId: createdUser.id,
-          role: "owner",
-        },
-      });
-
-      return { user: createdUser, workspace: createdWorkspace };
+      return {
+        user: toUserOutput(user),
+        defaultWorkspaceSlug: workspace.slug,
+      };
     });
-
-    return {
-      user: toUserOutput(result.user),
-      defaultWorkspaceSlug: result.workspace.slug,
-    };
   }
 }
 

@@ -5,6 +5,21 @@ import { type Language } from "@/i18n";
 import { AppError } from "@/trpc/errors";
 
 export class UserService {
+  async create(
+    input: { name: string; email: string; passwordHash: string },
+    tx?: Prisma.TransactionClient,
+  ) {
+    const client = tx ?? db;
+    return client.user.create({
+      data: {
+        name: input.name,
+        email: input.email,
+        passwordHash: input.passwordHash,
+        role: "user",
+      },
+    });
+  }
+
   async getById(userId: string) {
     return db.user.findUnique({ where: { id: userId } });
   }

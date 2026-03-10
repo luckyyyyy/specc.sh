@@ -37,8 +37,8 @@ async function bootstrap() {
   // can reliably display the error message regardless of where the throw originated.
   app.onError((err, c) => {
     const logger = new Logger("HonoError");
-    logger.error(`Unhandled error: ${err.message}`);
-    return c.json({ error: err.message || "Internal server error" }, 500);
+    logger.error(`Unhandled error: ${err.message}\n${err.stack ?? ""}`);
+    return c.json({ error: "Internal server error" }, 500);
   });
 
   app.use(

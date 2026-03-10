@@ -8,17 +8,22 @@ applyTo: "packages/server/**"
 ## Service Pattern
 
 ```typescript
+// user.mapper.ts — transform Prisma rows to output shapes
 import type { User } from "@/generated/prisma/client/client";
 import type { UserSettings } from "@specc/types";
-import { db } from "@/db/client";
 
 export const toUserOutput = (user: User) => ({
   id: user.id,
   name: user.name,
   email: user.email,
-  role: user.role as "admin" | "user",
+  role: user.role,
   settings: (user.settings as UserSettings | null) ?? null,
 });
+```
+
+```typescript
+// user.service.ts
+import { db } from "@/db/client";
 
 export class UserService {
   async getById(userId: string) {
@@ -30,7 +35,7 @@ export const userService = new UserService();
 ```
 
 - Prisma types imported from `@/generated/prisma/client/client`
-- Always export `toXxxOutput()` — never expose raw Prisma rows
+- `toXxxOutput()` lives in its own **`xxx.mapper.ts`** file — never expose raw Prisma rows
 - Export singleton: `export const xService = new XService()`
 - Use `@/` path aliases, not relative paths
 
@@ -43,10 +48,11 @@ import { UserProfileOutputSchema, UserUpdateInputSchema } from "@specc/types";
 
 export const userRouter = router({
   getProfile: protectedProcedure
+    .input(z.void())
     .output(UserProfileOutputSchema)
     .query(async ({ ctx }) => {
       const user = await userService.getById(ctx.userId);
-      if (!user) throw AppError.notFound("user not found");
+      if (!user) throw AppError.notFound(ctx.language, "errors.user.notFound");
       return toUserOutput(user);
     }),
 
@@ -65,7 +71,9 @@ export const userRouter = router({
 | `protectedProcedure` | Requires `ctx.userId` (from `@/trpc/init`) |
 | `workspaceProtectedProcedure` | Requires workspace membership (from `@/trpc/middlewares`) |
 
-Errors: `AppError.notFound()` · `AppError.badRequest()` · `AppError.unauthorized()` · `AppError.forbidden()`
+Errors: `AppError.notFound()` · `AppError.badRequest()` · `AppError.unauthorized()` · `AppError.forbidden()` · `AppError.tooManyRequests()`
+
+All `AppError` factories require **two** args: `(language: Language, i18nKey: string)` — e.g. `AppError.notFound(ctx.language, "errors.user.notFound")`.
 
 ## Registering a Router
 
@@ -81,8 +89,9 @@ export type AppRouter = typeof appRouter;
 
 ```typescript
 // modules/user/index.ts
-export * from "./user.router";
-export * from "./user.service";
+export { toUserOutput } from "./user.mapper";
+export { userRouter } from "./user.router";
+export { userService } from "./user.service";
 ```
 
 ## Prisma / Database

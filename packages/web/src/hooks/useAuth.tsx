@@ -1,10 +1,6 @@
 import type { User } from "@specc/types";
 import type { ReactElement, ReactNode } from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-} from "react";
+import { createContext, useCallback, useContext } from "react";
 import { useNavigate } from "react-router";
 import { trpc } from "@/lib/trpc";
 
@@ -56,7 +52,7 @@ export function AuthProvider({
     try {
       await logoutMutation.mutateAsync();
     } finally {
-      utils.user.getProfile.setData(undefined, undefined);
+      utils.user.getProfile.reset();
       navigate("/");
     }
   }, [logoutMutation, utils, navigate]);

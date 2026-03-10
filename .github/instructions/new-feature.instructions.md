@@ -43,11 +43,10 @@ pnpm --filter @specc/server db:push      # push schema to DB
 pnpm --filter @specc/server db:generate  # regenerate Prisma client
 ```
 
-## 3. Service (`modules/[feature]/[feature].service.ts`)
+## 3. Mapper (`modules/[feature]/[feature].mapper.ts`)
 
 ```typescript
 import type { Feature } from "@/generated/prisma/client/client";
-import { db } from "@/db/client";
 
 export const toFeatureOutput = (row: Feature) => ({
   id: row.id,
@@ -55,6 +54,12 @@ export const toFeatureOutput = (row: Feature) => ({
   name: row.name,
   createdAt: row.createdAt.toISOString()
 });
+```
+
+## 4. Service (`modules/[feature]/[feature].service.ts`)
+
+```typescript
+import { db } from "@/db/client";
 
 export class FeatureService {
   async list(workspaceId: string) {
@@ -64,12 +69,14 @@ export class FeatureService {
 export const featureService = new FeatureService();
 ```
 
-## 4. Router (`modules/[feature]/[feature].router.ts`)
+## 5. Router (`modules/[feature]/[feature].router.ts`)
 
 ```typescript
 import { FeatureSchema, CreateFeatureInputSchema } from "@specc/types";
+import { z } from "zod";
 import { protectedProcedure, router } from "@/trpc/init";
-import { featureService, toFeatureOutput } from "./feature.service";
+import { toFeatureOutput } from "./feature.mapper";
+import { featureService } from "./feature.service";
 
 export const featureRouter = router({
   list: protectedProcedure
@@ -82,12 +89,13 @@ export const featureRouter = router({
 });
 ```
 
-## 5. Module Index + Register Router
+## 6. Module Index + Register Router
 
 ```typescript
 // modules/[feature]/index.ts
-export * from "./feature.router";
-export * from "./feature.service";
+export { toFeatureOutput } from "./feature.mapper";
+export { featureRouter } from "./feature.router";
+export { featureService } from "./feature.service";
 ```
 
 ```typescript
@@ -98,7 +106,7 @@ export const appRouter = router({
 export type AppRouter = typeof appRouter;
 ```
 
-## 6. Frontend Usage
+## 7. Frontend Usage
 
 ```typescript
 const { data, isLoading } = trpc.feature.list.useQuery({ workspaceId });
@@ -108,7 +116,8 @@ const { data, isLoading } = trpc.feature.list.useQuery({ workspaceId });
 
 - [ ] Types/schemas in `packages/types`, exported from `index.ts`
 - [ ] Prisma model added, `db:push` + `db:generate` run
-- [ ] Service with `toXxxOutput(row: PrismaType)` — import type from `@/generated/prisma/client/client`
+- [ ] Mapper (`xxx.mapper.ts`) with `toXxxOutput(row: PrismaType)` — import type from `@/generated/prisma/client/client`
+- [ ] Service (`xxx.service.ts`) with business logic; imports mapper functions as needed
 - [ ] Router with `.input()` + `.output()` on all procedures, `protectedProcedure` for auth
-- [ ] Module `index.ts` exports router + service; router added to `appRouter`
+- [ ] Module `index.ts` exports mapper + router + service; router added to `appRouter`
 - [ ] `make lint && make tsc` passes

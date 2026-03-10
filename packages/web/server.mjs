@@ -43,6 +43,22 @@ Bun.serve({
       return proxyToApi(request);
     }
 
+    // 1b. Serve install.sh for curl requests to root — enables: curl -fsSL https://specc.sh | bash
+    if (
+      pathname === "/" &&
+      /curl\//i.test(request.headers.get("user-agent") || "")
+    ) {
+      const script = Bun.file(`${ASSET_DIR}/install.sh`);
+      if (await script.exists()) {
+        return new Response(script, {
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Cache-Control": "no-cache",
+          },
+        });
+      }
+    }
+
     // 2. Static assets — Bun.file() does zero-copy streaming + auto MIME
     //    Guard against path traversal before hitting the filesystem
     if (!pathname.includes("..")) {

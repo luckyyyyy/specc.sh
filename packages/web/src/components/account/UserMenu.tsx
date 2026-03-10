@@ -16,6 +16,8 @@ type UserMenuProps = {
   onUpdateUser: (user: User) => void;
   onLogout: () => void;
   showDashboardLink?: boolean;
+  /** Apply glassmorphism style to the dropdown panel (for landing page). */
+  glassy?: boolean;
 };
 
 export default function UserMenu({
@@ -23,6 +25,7 @@ export default function UserMenu({
   onUpdateUser,
   onLogout,
   showDashboardLink = false,
+  glassy = false,
 }: UserMenuProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -54,6 +57,11 @@ export default function UserMenu({
         onOpenChange={setOpen}
         trigger={trigger}
         align="right"
+        panelClassName={
+          glassy
+            ? "!bg-white/60 dark:!bg-zinc-900/50 !border-white/25 dark:!border-white/10 backdrop-blur-2xl !shadow-2xl"
+            : ""
+        }
       >
         <div className="px-4 py-2">
           <p className="text-sm font-medium text-[var(--ui-text)] truncate">

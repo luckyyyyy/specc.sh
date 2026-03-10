@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate, useNavigation } from "react-router";
-import { WorkspaceListContext } from "@/hooks";
 import { WorkspaceRedirectSkeleton } from "@/components/skeleton";
-import { useAuth } from "@/hooks";
+import { useAuth, WorkspaceListContext } from "@/hooks";
 import { trpc } from "@/lib/trpc";
 
 export default function DashboardRoot() {

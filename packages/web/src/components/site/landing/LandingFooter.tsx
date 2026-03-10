@@ -29,7 +29,7 @@ export function LandingFooter() {
             </p>
             <div className="mt-5 flex items-center gap-3">
               <a
-                href="https://github.com"
+                href="https://github.com/luckyyyyy/specc.sh"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"

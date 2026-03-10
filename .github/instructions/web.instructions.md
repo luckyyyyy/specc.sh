@@ -48,7 +48,7 @@ Add translations to both `packages/i18n/src/locales/en/` and `zh/`. **Never hard
 
 ## Error Pages
 
-Use `ErrorPage` from `@/components/ErrorPage`. Only 4 required props:
+Use `ErrorPage` from `@/components/error/ErrorPage`. Required props:
 
 ```tsx
 <ErrorPage

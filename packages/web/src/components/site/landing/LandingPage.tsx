@@ -5,8 +5,10 @@ import { HowItWorks } from "./HowItWorks";
 import { LandingCTA } from "./LandingCTA";
 import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
+import { QuickStart } from "./QuickStart";
 import { TechStack } from "./TechStack";
 import { WhyNotNextjs } from "./WhyNotNextjs";
+import { WhyVibeCodingFails } from "./WhyVibeCodingFails";
 
 export default function LandingPage() {
   return (
@@ -14,6 +16,8 @@ export default function LandingPage() {
       <LandingHeader />
       <main>
         <Hero />
+        <QuickStart />
+        <WhyVibeCodingFails />
         <Features />
         <WhyNotNextjs />
         <HowItWorks />

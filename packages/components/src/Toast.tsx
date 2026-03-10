@@ -53,13 +53,8 @@ function ToastItem({ item, onClose }: ToastItemProps) {
 
   return (
     <div
-      className="flex items-start w-80 rounded-md shadow-lg border overflow-hidden"
-      style={{
-        backgroundColor: "var(--ui-bg)",
-        borderColor: "var(--ui-border)",
-        borderLeftColor: cfg.borderColor,
-        borderLeftWidth: "3px",
-      }}
+      className="flex items-start w-80 rounded-md shadow-lg border border-[var(--ui-border)] border-l-[3px] overflow-hidden bg-[var(--ui-bg)]"
+      style={{ borderLeftColor: cfg.borderColor }}
     >
       {/* Icon */}
       <div
@@ -72,16 +67,12 @@ function ToastItem({ item, onClose }: ToastItemProps) {
 
       {/* Body */}
       <div className="flex-1 px-2 py-3 min-w-0 overflow-hidden">
-        <p
-          className="text-sm font-medium leading-snug break-words"
-          style={{ color: "var(--ui-text)" }}
-        >
+        <p className="text-sm font-medium leading-snug break-words text-[var(--ui-text)]">
           {item.content}
         </p>
         {item.route && (
           <p
-            className="mt-1 text-xs font-mono truncate"
-            style={{ color: "var(--ui-text-muted)" }}
+            className="mt-1 text-xs font-mono truncate text-[var(--ui-text-muted)]"
             title={item.route}
           >
             {item.route}
@@ -93,8 +84,7 @@ function ToastItem({ item, onClose }: ToastItemProps) {
       <button
         type="button"
         onClick={() => onClose(item.id)}
-        className="flex-shrink-0 p-3 cursor-pointer transition-colors hover:opacity-70"
-        style={{ color: "var(--ui-text-muted)" }}
+        className="flex-shrink-0 p-3 cursor-pointer transition-colors hover:opacity-70 text-[var(--ui-text-muted)]"
         aria-label="Close notification"
       >
         ×

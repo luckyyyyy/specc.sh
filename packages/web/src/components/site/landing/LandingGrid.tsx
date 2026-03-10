@@ -24,25 +24,14 @@ export function GridLine({
 }) {
   const position = row * GRID_SIZE;
   const [hasCompletedFirst, setHasCompletedFirst] = React.useState(false);
+  const [screenSize, setScreenSize] = React.useState(1920);
 
-  const { initialPosition, firstDuration, screenSize } = React.useMemo(() => {
-    if (typeof window === "undefined") {
-      return {
-        initialPosition: -120,
-        firstDuration: duration,
-        screenSize: 1920,
-      };
-    }
-    const size = isHorizontal ? window.innerWidth : window.innerHeight;
-    const totalDistance = size + 240;
-    const initPos = Math.random() * totalDistance - 120;
-    const remainingRatio = (size + 120 - initPos) / totalDistance;
-    return {
-      initialPosition: initPos,
-      firstDuration: duration * remainingRatio,
-      screenSize: size,
-    };
-  }, [isHorizontal, duration]);
+  React.useEffect(() => {
+    setScreenSize(isHorizontal ? window.innerWidth : window.innerHeight);
+  }, [isHorizontal]);
+
+  const initialPosition = -120;
+  const firstDuration = duration;
 
   const handleAnimationComplete = React.useCallback(() => {
     if (!hasCompletedFirst) {

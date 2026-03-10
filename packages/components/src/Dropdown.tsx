@@ -12,6 +12,8 @@ interface DropdownProps {
    */
   align?: "left" | "right";
   className?: string;
+  /** Extra classes applied to the floating panel element. */
+  panelClassName?: string;
 }
 
 const GAP = 6; // px gap between trigger bottom/top and panel
@@ -24,6 +26,7 @@ export function Dropdown({
   children,
   align = "left",
   className = "",
+  panelClassName = "",
 }: DropdownProps) {
   const triggerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -102,7 +105,7 @@ export function Dropdown({
           <div
             ref={panelRef}
             style={panelStyle}
-            className="min-w-[200px] rounded-md border bg-[var(--ui-bg-element)] border-[var(--ui-border)] shadow-lg py-1"
+            className={`min-w-[200px] rounded-md border bg-[var(--ui-bg-element)] border-[var(--ui-border)] shadow-lg py-1 ${panelClassName}`}
           >
             {children}
           </div>,

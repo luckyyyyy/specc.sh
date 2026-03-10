@@ -7,6 +7,7 @@ export const landingEn: LandingSchema = {
       features: "Why This Template",
       howItWorks: "How it Works",
       techStack: "Tech Stack",
+      quickStart: "Quick Start",
       github: "GitHub",
       getStarted: "Get Started",
       dashboard: "Dashboard",
@@ -14,8 +15,8 @@ export const landingEn: LandingSchema = {
     // Hero
     hero: {
       badge: "The End of Handwritten Code",
-      title1: "Your AI Writes.",
-      title2: "You Ship.",
+      title1: "Your AI Writes",
+      title2: "You Ship",
       subtitle:
         "Describe your idea. AI handles the rest. — A full-stack spec template for AI, making your Claude Code / Copilot / Cursor / Codex produce production-grade code every time",
       ctaGithub: "Fork Template",
@@ -31,7 +32,7 @@ export const landingEn: LandingSchema = {
     features: {
       sectionTitle: "Why You Need This Template",
       sectionSubtitle:
-        "Vibe Coding lets AI freestyle — the result is a mess. Spec Coding gives AI rules and constraints. This template IS the spec — production-grade output every time",
+        "Vibe Coding lets AI freestyle — the result is a mess. Spec Coding is different: the architecture itself is the prompt. No docs to write. The folder structure, types, and lint rules tell AI exactly what to do — production-grade output every time",
       items: {
         typeSafe: {
           title: "Tame AI Output",
@@ -210,6 +211,34 @@ export const landingEn: LandingSchema = {
         desc: "TailwindCSS 4 by default — beautiful and standardized. Not satisfied? Let AI swap it to any UI framework, architecture unaffected",
       },
     },
+    // Why Vibe Coding Fails
+    whyVibeFails: {
+      badge: "The Real Problem",
+      sectionTitle: "Why Is Vibe Coding So Hard to Get Right?",
+      sectionSubtitle:
+        "Everyone's tried it. The AI writes hundreds of lines in seconds. It looks great. Then you run it — and it breaks. This isn't bad luck. It's structural.",
+      reasonsTitle: "The Root Causes",
+      reasons: {
+        noSpec: {
+          title: "No Project-Level Spec",
+          desc: "The AI doesn't know your folder conventions, naming patterns, or architecture decisions. It guesses — and guesses differently every time.",
+        },
+        noConstraints: {
+          title: "No Enforced Constraints",
+          desc: "Without lint rules, type schemas, and output contracts baked into the project, the AI freestyle-codes its way into an inconsistent mess.",
+        },
+        noLanguage: {
+          title: "No Shared Language",
+          desc: 'Your AI tool has no idea what "production-grade" means for your project unless you tell it explicitly — every session starts from scratch.',
+        },
+      },
+      result:
+        "The result: code that compiles on Monday, breaks on Tuesday, and is impossible to extend by Friday.",
+      callout:
+        "The problem isn't the AI. It's the absence of structure the AI can read.",
+      solution:
+        "SPECC.SH solves this through architecture, not documentation. The folder layout, type schemas, lint rules, and module contracts are the prompt — AI reads the codebase and follows it. No docs to write, no conventions to explain.",
+    },
     // Why Not Next.js
     whyNotNextjs: {
       badge: "Why Not Next.js?",
@@ -233,7 +262,8 @@ export const landingEn: LandingSchema = {
         },
       },
       solutionTitle: "Right Tool for the Right Job",
-      solutionSubtitle: "SSR where it matters for business. CSR where speed matters for users",
+      solutionSubtitle:
+        "SSR where it matters for business. CSR where speed matters for users",
       ssr: {
         title: "Marketing Site — Server-Side Rendered",
         desc: "React Router v7 SSR via Hono. First paint is instant, fully SEO-indexed — search engines crawl it, users trust it",
@@ -244,6 +274,23 @@ export const landingEn: LandingSchema = {
       },
       clarification:
         "Both modes coexist in one codebase. Switch routing strategy per route — no framework lock-in, no Vercel dependency, deploy anywhere",
+    },
+    // Quick Start
+    quickStart: {
+      sectionTitle: "One-Line Install",
+      sectionSubtitle:
+        "No manual setup needed — one command clones the template, installs dependencies, and starts all services",
+      copied: "Copied!",
+      copyTooltip: "Copy command",
+      prereqTitle: "Prerequisites",
+      prereqs: {
+        node: "Node.js 20+",
+        docker: "Docker",
+        pnpm: "pnpm 9+",
+      },
+      terminalTitle: "Terminal",
+      orFork: "Or fork directly on GitHub",
+      forkBtn: "Fork Template",
     },
     // Footer
     footer: {

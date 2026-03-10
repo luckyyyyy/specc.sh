@@ -3,13 +3,16 @@
  *
  * Works with any S3-compatible service — configure via environment variables:
  *
+ * NOTE: STORAGE_PUBLIC_URL is a *frontend* variable (VITE_STORAGE_PUBLIC_URL).
+ *       This server-side provider never reads it — the server only stores file keys,
+ *       and the frontend constructs full URLs itself.
+ *
  * AWS S3:
  *   STORAGE_ENDPOINT=          (leave empty → SDK uses default AWS endpoint)
  *   STORAGE_REGION=us-east-1
  *   STORAGE_BUCKET=my-bucket
  *   STORAGE_ACCESS_KEY_ID=<key>
  *   STORAGE_SECRET_ACCESS_KEY=<secret>
- *   STORAGE_PUBLIC_URL=https://<bucket>.s3.<region>.amazonaws.com
  *   STORAGE_PATH_STYLE=false
  *
  * MinIO (dev):
@@ -18,7 +21,6 @@
  *   STORAGE_BUCKET=avatars
  *   STORAGE_ACCESS_KEY_ID=minioadmin
  *   STORAGE_SECRET_ACCESS_KEY=minioadmin
- *   STORAGE_PUBLIC_URL=http://localhost:9000
  *   STORAGE_PATH_STYLE=true
  *
  * Alibaba Cloud OSS (S3-compatible API):
@@ -27,7 +29,6 @@
  *   STORAGE_BUCKET=my-bucket
  *   STORAGE_ACCESS_KEY_ID=<AccessKeyId>
  *   STORAGE_SECRET_ACCESS_KEY=<AccessKeySecret>
- *   STORAGE_PUBLIC_URL=https://<bucket>.oss-cn-hangzhou.aliyuncs.com
  *   STORAGE_PATH_STYLE=false
  */
 import {

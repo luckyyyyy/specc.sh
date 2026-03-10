@@ -54,7 +54,7 @@ export function LandingCTA() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <motion.a
-              href="https://github.com"
+              href="https://github.com/luckyyyyy/specc.sh"
               target="_blank"
               rel="noreferrer"
               whileHover={{ scale: 1.03 }}

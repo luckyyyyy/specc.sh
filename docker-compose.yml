@@ -2,7 +2,7 @@ services:
   # Redis — 分布式限流 / 缓存
   redis:
     image: redis:7-alpine
-    container_name: ai-stack-redis
+    container_name: specc-redis
     command: redis-server --save 60 1 --loglevel warning
     ports:
       - "6379:6379"
@@ -20,11 +20,11 @@ services:
   # PostgreSQL 数据库
   db:
     image: postgres:18
-    container_name: ai-stack-postgres
+    container_name: specc-postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-ai_stack_db}
+      POSTGRES_DB: ${POSTGRES_DB:-specc}
     ports:
       - "5432:5432"
     volumes:
@@ -42,7 +42,7 @@ services:
   # update STORAGE_* variables in the server environment.
   minio:
     image: minio/minio:latest
-    container_name: ai-stack-minio
+    container_name: specc-minio
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
@@ -63,7 +63,7 @@ services:
   # One-shot container that creates the bucket and sets it to public-read
   minio-init:
     image: minio/mc:latest
-    container_name: ai-stack-minio-init
+    container_name: specc-minio-init
     depends_on:
       minio:
         condition: service_healthy
@@ -80,14 +80,14 @@ services:
 
   # 数据库迁移（一次性容器，生产环境启动前执行 drizzle-kit push）
   db-migrate:
-    image: ai-stack-server-migrate:latest
-    container_name: ai-stack-db-migrate
+    image: specc-server-migrate:latest
+    container_name: specc-db-migrate
     build:
       context: .
       dockerfile: packages/server/Dockerfile
       target: migrate
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-ai_stack_db}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-specc}
     depends_on:
       db:
         condition: service_healthy
@@ -97,13 +97,13 @@ services:
 
   # 后端服务
   server:
-    image: ai-stack-server:latest
-    container_name: ai-stack-server
+    image: specc-server:latest
+    container_name: specc-server
     build:
       context: .
       dockerfile: packages/server/Dockerfile
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-ai_stack_db}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-specc}
       NODE_ENV: production
       PORT: 4000
       # Storage (MinIO — S3 compatible)
@@ -134,8 +134,8 @@ services:
 
   # 前端服务（React Router SSR）
   web:
-    image: ai-stack-web:latest
-    container_name: ai-stack-web
+    image: specc-web:latest
+    container_name: specc-web
     build:
       context: .
       dockerfile: packages/web/Dockerfile

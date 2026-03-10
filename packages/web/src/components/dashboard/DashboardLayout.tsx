@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Outlet, useNavigate, useParams } from "react-router";
 import { useTranslation } from "react-i18next";
+import { Outlet, useNavigate, useParams } from "react-router";
 import { UserMenu } from "@/components/account";
 import { WorkspaceRedirectSkeleton } from "@/components/skeleton";
 import { useAuth, useWorkspaceList, WorkspaceContext } from "@/hooks";
 import CreateWorkspaceModal from "./CreateWorkspaceModal";
-import WorkspaceSwitcher from "./WorkspaceSwitcher";
 import SidebarNav from "./SidebarNav";
+import WorkspaceSwitcher from "./WorkspaceSwitcher";
 
 function WorkspaceNotFound({ slug }: { slug: string }) {
   const { t } = useTranslation();
@@ -17,8 +17,7 @@ function WorkspaceNotFound({ slug }: { slug: string }) {
           {t("errors.workspace.notFound")}
         </h2>
         <p className="text-[var(--ui-text-muted)]">
-          <code className="text-[var(--ui-focus)]">/{slug}</code>
-          {" "}
+          <code className="text-[var(--ui-focus)]">/{slug}</code>{" "}
           {t("errors.workspace.notFoundDesc")}
         </p>
       </div>
@@ -71,7 +70,7 @@ export default function DashboardLayout() {
       </aside>
 
       {/* Scrollable main content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto bg-[var(--ui-bg-subtle)]">
         {workspaceNotFound ? (
           <WorkspaceNotFound slug={currentSlug} />
         ) : (

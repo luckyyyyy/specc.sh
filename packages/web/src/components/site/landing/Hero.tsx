@@ -36,7 +36,8 @@ const techItems = [
 ];
 
 export function Hero() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language === "zh";
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
@@ -100,7 +101,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.05 }}
-          className="text-6xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight leading-none"
+          className={`${isZh ? "text-5xl sm:text-6xl lg:text-7xl" : "text-6xl sm:text-7xl lg:text-8xl"} font-extrabold tracking-tight leading-none`}
         >
           <span className="text-zinc-900 dark:text-white">
             {t("landing.hero.title1")}
@@ -116,7 +117,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="mt-6 text-lg sm:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed"
+          className={`mt-6 ${isZh ? "text-base sm:text-lg" : "text-lg sm:text-xl"} text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed`}
         >
           {t("landing.hero.subtitle")}
         </motion.p>
@@ -185,7 +186,7 @@ export function Hero() {
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <motion.a
-            href="https://github.com"
+            href="https://github.com/luckyyyyy/specc.sh"
             target="_blank"
             rel="noreferrer"
             whileHover={{ scale: 1.03 }}

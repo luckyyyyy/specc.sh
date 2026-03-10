@@ -35,6 +35,7 @@ RUN pnpm install --frozen-lockfile
 
 # 复制源代码和配置文件
 COPY packages/web/src ./packages/web/src
+COPY packages/web/public ./packages/web/public
 COPY packages/web/index.html ./packages/web/
 COPY packages/web/vite.config.ts ./packages/web/
 COPY packages/web/react-router.config.ts ./packages/web/

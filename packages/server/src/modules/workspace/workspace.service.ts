@@ -1,5 +1,6 @@
 import { slugify } from "@specc/types";
 import { db } from "@/db/client";
+import { Prisma } from "@/generated/prisma/client/client";
 import { type Language } from "@/i18n";
 import { AppError } from "@/trpc/errors";
 
@@ -26,31 +27,45 @@ export class WorkspaceService {
   }
 
   async ensureUniqueSlug(baseSlug: string) {
-    let slug = baseSlug;
-    let suffix = 1;
+    // Batch-query the first N candidates in one round-trip, then resolve in memory.
+    const BATCH = 20;
+    const candidates = [
+      baseSlug,
+      ...Array.from({ length: BATCH - 1 }, (_, i) => `${baseSlug}-${i + 2}`),
+    ];
 
+    const taken = await db.workspace.findMany({
+      where: { slug: { in: candidates } },
+      select: { slug: true },
+    });
+
+    const takenSet = new Set(taken.map((w) => w.slug));
+    const available = candidates.find((s) => !takenSet.has(s));
+    if (available) return available;
+
+    // Rare fallback: all batch candidates are taken — fall back to single queries.
+    let suffix = BATCH + 1;
     while (true) {
+      const next = `${baseSlug}-${suffix}`;
       const existing = await db.workspace.findUnique({
-        where: { slug },
+        where: { slug: next },
         select: { id: true },
       });
-      if (!existing) break;
+      if (!existing) return next;
       suffix += 1;
-      slug = `${baseSlug}-${suffix}`;
     }
-
-    return slug;
   }
 
   async create(
     input: { name: string; slug?: string; description?: string | null },
     userId: string,
+    tx?: Prisma.TransactionClient,
   ) {
     const baseSlug = input.slug?.trim() || slugify(input.name) || "workspace";
     const slug = await this.ensureUniqueSlug(baseSlug);
 
-    return db.$transaction(async (tx) => {
-      const workspace = await tx.workspace.create({
+    const run = async (client: Prisma.TransactionClient) => {
+      const workspace = await client.workspace.create({
         data: {
           name: input.name,
           slug,
@@ -58,7 +73,7 @@ export class WorkspaceService {
         },
       });
 
-      await tx.workspaceMember.create({
+      await client.workspaceMember.create({
         data: {
           workspaceId: workspace.id,
           userId,
@@ -67,7 +82,9 @@ export class WorkspaceService {
       });
 
       return workspace;
-    });
+    };
+
+    return tx ? run(tx) : db.$transaction(run);
   }
 
   private async requireOwner(

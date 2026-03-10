@@ -2,8 +2,8 @@ import type { User } from "@specc/types";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { resolveAvatarUrl } from "@/lib/avatar";
-import { trpc } from "@/lib/trpc";
 import { message } from "@/lib/message";
+import { trpc } from "@/lib/trpc";
 
 /**
  * Encapsulates avatar upload / delete state and handlers.
