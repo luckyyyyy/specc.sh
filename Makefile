@@ -79,6 +79,10 @@ init: ## 首次初始化项目（安装依赖+启动服务+同步Schema）
 	@pnpm --filter @specc/server db:push
 	@printf "$(GREEN)✓ 数据库 Schema 同步完成$(NC)\n"
 	@printf "\n"
+	@printf "$(YELLOW)⚙️  [6b] 生成 Prisma Client...$(NC)\n"
+	@pnpm --filter @specc/server db:generate
+	@printf "$(GREEN)✓ Prisma Client 生成完成$(NC)\n"
+	@printf "\n"
 	@printf "$(BLUE)═══════════════════════════════════════$(NC)\n"
 	@printf "$(GREEN)  ✨ 初始化完成！$(NC)\n"
 	@printf "$(BLUE)═══════════════════════════════════════$(NC)\n"
