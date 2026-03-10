@@ -59,7 +59,7 @@ if echo "${LANG:-} ${LC_ALL:-} ${LC_MESSAGES:-}" | grep -qi "zh"; then
 fi
 
 # Read from /dev/tty so this works even when piped via curl | bash
-if [ -e /dev/tty ]; then
+if { : </dev/tty; } 2>/dev/null; then
   printf "  Select language / 选择语言:\n"
   printf "    ${GREEN}[1]${NC} English\n"
   printf "    ${BLUE}[2]${NC} 中文\n"
@@ -283,6 +283,91 @@ show_missing_instructions() {
   exit 1
 }
 
+# ── auto-install missing deps on Linux ────────────────────────────────────────
+auto_install_linux() {
+  local run_as=""
+  [ "$(id -u)" -ne 0 ] && command -v sudo >/dev/null 2>&1 && run_as="sudo"
+  [ "$(id -u)" -ne 0 ] && ! command -v sudo >/dev/null 2>&1 && {
+    if [ "$LANG_MODE" = "zh" ]; then
+      error "需要 root 权限或 sudo 才能自动安装依赖"
+    else
+      error "Root or sudo access is required for auto-installation"
+    fi
+  }
+
+  # ── git / make ──
+  local sys_pkgs=""
+  ! command -v git  >/dev/null 2>&1 && sys_pkgs="$sys_pkgs git"
+  ! command -v make >/dev/null 2>&1 && sys_pkgs="$sys_pkgs make"
+  if [ -n "$sys_pkgs" ]; then
+    if [ "$LANG_MODE" = "zh" ]; then info "安装$sys_pkgs..."; else info "Installing$sys_pkgs..."; fi
+    if command -v apt-get >/dev/null 2>&1; then
+      $run_as apt-get update -qq && $run_as apt-get install -y $sys_pkgs
+    elif command -v yum >/dev/null 2>&1; then
+      $run_as yum install -y $sys_pkgs
+    fi
+    if [ "$LANG_MODE" = "zh" ]; then success "make / git 安装完成"; else success "make / git installed"; fi
+  fi
+
+  # ── docker ──
+  if ! command -v docker >/dev/null 2>&1; then
+    if [ "$LANG_MODE" = "zh" ]; then
+      info "安装 Docker（阿里云镜像加速）..."
+      curl -fsSL https://get.docker.com | $run_as bash -s -- --mirror Aliyun
+    else
+      info "Installing Docker..."
+      curl -fsSL https://get.docker.com | $run_as sh
+    fi
+    $run_as systemctl enable --now docker 2>/dev/null || $run_as service docker start 2>/dev/null || true
+    if [ "$LANG_MODE" = "zh" ]; then success "Docker 安装完成"; else success "Docker installed"; fi
+  fi
+
+  # ── docker-compose shim (v2 plugin → legacy binary compatibility) ──
+  if ! command -v docker-compose >/dev/null 2>&1; then
+    if docker compose version >/dev/null 2>&1; then
+      if [ "$LANG_MODE" = "zh" ]; then info "创建 docker-compose 兼容脚本..."; else info "Creating docker-compose compatibility shim..."; fi
+      cat > /usr/local/bin/docker-compose << 'SHIM'
+#!/bin/sh
+exec docker compose "$@"
+SHIM
+      chmod +x /usr/local/bin/docker-compose
+      if [ "$LANG_MODE" = "zh" ]; then success "docker-compose 兼容脚本已创建"; else success "docker-compose shim created"; fi
+    elif command -v apt-get >/dev/null 2>&1; then
+      $run_as apt-get install -y docker-compose-plugin
+      cat > /usr/local/bin/docker-compose << 'SHIM'
+#!/bin/sh
+exec docker compose "$@"
+SHIM
+      chmod +x /usr/local/bin/docker-compose
+    fi
+  fi
+
+  # ── node ──
+  if ! command -v node >/dev/null 2>&1; then
+    if [ "$LANG_MODE" = "zh" ]; then info "安装 Node.js 22 LTS..."; else info "Installing Node.js 22 LTS..."; fi
+    if command -v apt-get >/dev/null 2>&1; then
+      curl -fsSL https://deb.nodesource.com/setup_22.x | $run_as bash -
+      $run_as apt-get install -y nodejs
+    elif command -v yum >/dev/null 2>&1; then
+      curl -fsSL https://rpm.nodesource.com/setup_22.x | $run_as bash -
+      $run_as yum install -y nodejs
+    fi
+    if [ "$LANG_MODE" = "zh" ]; then success "Node.js 安装完成"; else success "Node.js installed"; fi
+  fi
+
+  # ── pnpm ──
+  if ! command -v pnpm >/dev/null 2>&1; then
+    if [ "$LANG_MODE" = "zh" ]; then
+      info "安装 pnpm（淘宝镜像）..."
+      npm install -g pnpm --registry=https://registry.npmmirror.com
+    else
+      info "Installing pnpm..."
+      npm install -g pnpm
+    fi
+    if [ "$LANG_MODE" = "zh" ]; then success "pnpm 安装完成"; else success "pnpm installed"; fi
+  fi
+}
+
 # ── prerequisite checks ───────────────────────────────────────────────────────
 MISSING_CMDS=""
 check_command() {
@@ -311,7 +396,39 @@ check_command pnpm
 printf "\n"
 
 if [ -n "$MISSING_CMDS" ]; then
-  show_missing_instructions "$(echo $MISSING_CMDS | xargs)"
+  case "$OS" in
+    debian|rhel|linux)
+      if [ "$LANG_MODE" = "zh" ]; then
+        printf "${YELLOW}  ⚠ 缺少依赖：${BOLD}$(echo $MISSING_CMDS | xargs)${NC}\n"
+        printf "  将自动安装，按 ${RED}Ctrl+C${NC} 取消..."
+      else
+        printf "${YELLOW}  ⚠ Missing:${BOLD} $(echo $MISSING_CMDS | xargs)${NC}\n"
+        printf "  Will auto-install. Press ${RED}Ctrl+C${NC} to cancel..."
+      fi
+      sleep 2
+      printf "\n\n"
+      auto_install_linux
+      # ── re-check after install ──────────────────────────────────────────────
+      MISSING_CMDS=""
+      if [ "$LANG_MODE" = "zh" ]; then
+        step "重新检查依赖..."
+      else
+        step "Re-checking prerequisites..."
+      fi
+      check_command git
+      check_command make
+      check_command docker
+      check_command node
+      check_command pnpm
+      printf "\n"
+      if [ -n "$MISSING_CMDS" ]; then
+        show_missing_instructions "$(echo $MISSING_CMDS | xargs)"
+      fi
+      ;;
+    *)
+      show_missing_instructions "$(echo $MISSING_CMDS | xargs)"
+      ;;
+  esac
 fi
 
 # ── Node.js version check ─────────────────────────────────────────────────────
@@ -326,24 +443,54 @@ if [ "$NODE_VERSION" -lt 20 ]; then
   fi
 fi
 if [ "$LANG_MODE" = "zh" ]; then
-  success "Node.js v$(node --version) 版本检查通过"
+  success "Node.js $(node --version) 版本检查通过"
 else
-  success "Node.js v$(node --version) OK"
+  success "Node.js $(node --version) OK"
 fi
 
 # ── Docker daemon check ───────────────────────────────────────────────────────
-if ! docker info >/dev/null 2>&1; then
-  if [ "$LANG_MODE" = "zh" ]; then
-    error "Docker 守护进程未运行。请启动 Docker Desktop 或执行：sudo systemctl start docker"
-  else
-    error "Docker daemon is not running. Please start Docker Desktop (or the Docker service) and retry."
+_docker_tries=0
+while ! docker info >/dev/null 2>&1; do
+  _docker_tries=$((_docker_tries + 1))
+  if [ "$_docker_tries" -ge 12 ]; then
+    if [ "$LANG_MODE" = "zh" ]; then
+      error "Docker 守护进程未运行。请启动 Docker Desktop 或执行：sudo systemctl start docker"
+    else
+      error "Docker daemon is not running. Please start Docker Desktop (or run: sudo systemctl start docker)"
+    fi
   fi
-fi
+  if [ "$LANG_MODE" = "zh" ]; then
+    info "等待 Docker 守护进程就绪... ($_docker_tries/12)"
+  else
+    info "Waiting for Docker daemon... ($_docker_tries/12)"
+  fi
+  sleep 2
+done
 if [ "$LANG_MODE" = "zh" ]; then
   success "Docker 守护进程运行中"
 else
   success "Docker daemon is running"
 fi
+
+# ── docker-compose shim (v2 plugin → legacy binary compatibility) ─────────────
+if ! command -v docker-compose >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+  if [ "$LANG_MODE" = "zh" ]; then
+    info "创建 docker-compose 兼容脚本..."
+  else
+    info "Creating docker-compose compatibility shim..."
+  fi
+  cat > /usr/local/bin/docker-compose << 'SHIM'
+#!/bin/sh
+exec docker compose "$@"
+SHIM
+  chmod +x /usr/local/bin/docker-compose
+  if [ "$LANG_MODE" = "zh" ]; then
+    success "docker-compose 兼容脚本已创建"
+  else
+    success "docker-compose shim created"
+  fi
+fi
+
 printf "\n"
 
 # ── port conflict check helpers ───────────────────────────────────────────────
@@ -380,7 +527,7 @@ check_ports() {
       printf "${YELLOW}  ⚠ These ports are required by specc.sh. Conflicts may cause startup failures.${NC}\n"
       printf "  Press ${GREEN}Enter${NC} to continue, or ${RED}Ctrl+C${NC} to exit and free the ports first... "
     fi
-    [ -e /dev/tty ] && read -r _ </dev/tty || true
+    { : </dev/tty; } 2>/dev/null && read -r _ </dev/tty 2>/dev/null || true
     printf "\n"
   else
     if [ "$LANG_MODE" = "zh" ]; then
@@ -445,6 +592,23 @@ else
 fi
 printf "\n"
 make init
+
+# ── ensure Prisma client is generated ────────────────────────────────────────
+# pnpm v10 blocks postinstall scripts by default; prisma db push (v6) no longer
+# auto-generates, so we run it explicitly after init.
+if [ -f "packages/server/package.json" ] && [ ! -d "packages/server/src/generated/prisma" ]; then
+  if [ "$LANG_MODE" = "zh" ]; then
+    info "生成 Prisma 客户端..."
+  else
+    info "Generating Prisma client..."
+  fi
+  pnpm --filter @specc/server db:generate
+  if [ "$LANG_MODE" = "zh" ]; then
+    success "Prisma 客户端生成完成"
+  else
+    success "Prisma client generated"
+  fi
+fi
 
 # ── done / start dev ─────────────────────────────────────────────────────────
 printf "\n"
