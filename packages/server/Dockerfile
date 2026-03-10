@@ -34,6 +34,10 @@ COPY packages/server/src ./packages/server/src
 COPY packages/server/prisma.config.ts ./packages/server/
 COPY packages/server/prisma ./packages/server/prisma/
 
+# 先构建 i18n（server rollup 会将其内联进 dist）
+WORKDIR /app/packages/i18n
+RUN pnpm build
+
 # 构建应用（rollup + preserveModules，保留模块结构的原生 ESM）
 WORKDIR /app/packages/server
 RUN pnpm build

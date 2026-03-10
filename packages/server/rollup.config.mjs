@@ -24,7 +24,7 @@ export default {
   treeshake: false,
   plugins: [
     // 解析 @specc/* 工作区包，从其 dist 打包进来
-    resolve({ resolveOnly: [/@acme\//] }),
+    resolve({ resolveOnly: [/@specc\//] }),
     json(),
     typescript({
       compilerOptions: {
