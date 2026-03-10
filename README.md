@@ -34,15 +34,6 @@ The result: code that compiles on Monday, breaks on Tuesday, and is impossible t
 
 SPECC.SH solves this at the architecture level. There's no separate doc to write or maintain. The folder structure, type schemas, lint rules, and module contracts **are** the prompt — the codebase itself tells AI exactly what to do, every time.
 
-You've probably tried **Vibe Coding** — typing prompts into Claude Code, Cursor, or Copilot and hoping for the best. Sometimes it works. Often it doesn't. The AI writes code that doesn't compile, ignores your conventions, or breaks something else.
-
-**The problem isn't the AI. It's the lack of a spec.**
-
-SPECC.SH is a full-stack template where the architecture itself is the prompt. The folder structure, type system, module boundaries, and lint rules tell AI exactly what to do — no separate documentation required. When your AI opens this codebase, it stops guessing and starts following the structure — producing code that compiles, passes lint, and ships to production on the first try.
-
-> **Vibe Coding** = AI freestyles → inconsistent mess
-> **Spec Coding** = AI follows your spec → production-grade output
-
 ---
 
 ## How It Works (No Coding Required)
