@@ -1,7 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import { ZodError } from "zod";
 import { formatZodError } from "@/utils/format-zod-error";
-import type { AuthContext, Context } from "./context";
+import type { AuthContext, Context, WechatAuthContext } from "./context";
 import { AppError } from "./errors";
 
 const t = initTRPC.context<Context>().create({
@@ -29,4 +29,11 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     throw AppError.unauthorized(ctx.language, "errors.common.unauthorized");
   }
   return next({ ctx: ctx as AuthContext });
+});
+
+export const wechatProtectedProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.wechatUserId) {
+    throw AppError.unauthorized(ctx.language, "errors.common.unauthorized");
+  }
+  return next({ ctx: ctx as WechatAuthContext });
 });

@@ -1,4 +1,4 @@
-.PHONY: init dev build docker prod tsc lint help
+.PHONY: init dev dev-miniapp build build-miniapp docker prod tsc lint help
 
 # 读取环境变量（如果存在）
 -include .env
@@ -22,11 +22,13 @@ help: ## 显示帮助信息
 	@printf "$(BLUE)═══════════════════════════════════════$(NC)\n"
 	@printf "$(GREEN)  可用的 Make 命令$(NC)\n"
 	@printf "$(BLUE)═══════════════════════════════════════$(NC)\n"
-	@printf "  $(YELLOW)make init$(NC)   - 首次初始化项目（安装依赖+启动服务+同步Schema）\n"
-	@printf "  $(YELLOW)make dev$(NC)    - 启动开发环境（数据库+开发服务器）\n"
-	@printf "  $(YELLOW)make build$(NC)  - 编译生产版本\n"
-	@printf "  $(YELLOW)make docker$(NC) - 构建所有 Docker 镜像\n"
-	@printf "  $(YELLOW)make prod$(NC)   - 构建镜像并启动完整生产栈\n"
+	@printf "  $(YELLOW)make init$(NC)        - 首次初始化项目（安装依赖+启动服务+同步Schema）\n"
+	@printf "  $(YELLOW)make dev$(NC)         - 启动开发环境（数据库+开发服务器+小程序监听）\n"
+	@printf "  $(YELLOW)make dev-miniapp$(NC) - 仅启动小程序开发监听\n"
+	@printf "  $(YELLOW)make build$(NC)       - 编译生产版本（server + web）\n"
+	@printf "  $(YELLOW)make build-miniapp$(NC) - 编译小程序\n"
+	@printf "  $(YELLOW)make docker$(NC)      - 构建所有 Docker 镜像\n"
+	@printf "  $(YELLOW)make prod$(NC)        - 构建镜像并启动完整生产栈\n"
 	@printf "$(BLUE)═══════════════════════════════════════$(NC)\n"
 
 init: ## 首次初始化项目（安装依赖+启动服务+同步Schema）
@@ -52,6 +54,12 @@ init: ## 首次初始化项目（安装依赖+启动服务+同步Schema）
 		printf "$(GREEN)✓ 已从 .env.example 创建 web .env 文件$(NC)\n"; \
 	else \
 		printf "$(GREEN)✓ web .env 文件已存在$(NC)\n"; \
+	fi
+	@if [ ! -f packages/miniapp/.env ]; then \
+		cp packages/miniapp/.env.example packages/miniapp/.env; \
+		printf "$(GREEN)✓ 已从 .env.example 创建 miniapp .env 文件$(NC)\n"; \
+	else \
+		printf "$(GREEN)✓ miniapp .env 文件已存在$(NC)\n"; \
 	fi
 	@printf "\n"
 	@printf "$(YELLOW)📁 [2/6] 创建数据目录...$(NC)\n"
@@ -90,13 +98,29 @@ init: ## 首次初始化项目（安装依赖+启动服务+同步Schema）
 	@printf "$(YELLOW)👉 运行 'make dev' 启动开发服务器$(NC)\n"
 	@printf "\n"
 
-dev: ## 启动开发环境（数据库+开发服务器）
+dev: ## 启动开发环境（数据库+开发服务器+小程序监听）
 	@printf "$(GREEN)🚀 启动开发环境...$(NC)\n"
 	@docker-compose up -d db minio redis
 	@docker-compose run --rm minio-init 2>/dev/null || true
 	@printf "$(GREEN)✓ 数据库、MinIO 和 Redis 已启动$(NC)\n"
 	@printf "$(YELLOW)启动开发服务器...$(NC)\n"
 	@pnpm dev
+
+dev-miniapp: ## 仅启动小程序开发监听（编译至 dist/，用微信开发者工具导入）
+	@printf "$(GREEN)🚀 启动小程序开发监听...$(NC)\n"
+	@if [ ! -f packages/miniapp/.env ]; then \
+		cp packages/miniapp/.env.example packages/miniapp/.env; \
+		printf "$(GREEN)✓ 已从 .env.example 创建 miniapp .env 文件$(NC)\n"; \
+	fi
+	@pnpm -C packages/miniapp dev
+
+build-miniapp: ## 编译小程序（输出至 packages/miniapp/dist/）
+	@printf "$(GREEN)🔨 编译小程序...$(NC)\n"
+	@if [ ! -f packages/miniapp/.env ]; then \
+		cp packages/miniapp/.env.example packages/miniapp/.env; \
+	fi
+	@pnpm -C packages/miniapp build
+	@printf "$(GREEN)✓ 小程序编译完成，输出目录：packages/miniapp/dist/$(NC)\n"
 
 build: ## 编译生产版本
 	@printf "$(GREEN)🔨 开始编译...$(NC)\n"

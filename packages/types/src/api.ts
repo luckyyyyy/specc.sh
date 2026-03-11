@@ -28,12 +28,23 @@ export const UserUpdateInputSchema = z.object({
   settings: UserSettingsPatchSchema.nullable().optional(),
 });
 
+export const ChangePasswordInputSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8),
+});
+
+export const ChangePasswordOutputSchema = z.object({
+  success: z.boolean(),
+});
+
 export type LoginInput = z.infer<typeof LoginInputSchema>;
 export type RegisterInput = z.infer<typeof RegisterInputSchema>;
 export type AuthOutput = z.infer<typeof AuthOutputSchema>;
 export type LogoutOutput = z.infer<typeof LogoutOutputSchema>;
 export type UserProfileOutput = z.infer<typeof UserProfileOutputSchema>;
 export type UserUpdateInput = z.infer<typeof UserUpdateInputSchema>;
+export type ChangePasswordInput = z.infer<typeof ChangePasswordInputSchema>;
+export type ChangePasswordOutput = z.infer<typeof ChangePasswordOutputSchema>;
 
 const WORKSPACE_SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const WORKSPACE_SLUG_MESSAGE =

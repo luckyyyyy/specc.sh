@@ -1,5 +1,7 @@
 export type {
   AuthOutput,
+  ChangePasswordInput,
+  ChangePasswordOutput,
   CreateWorkspaceInput,
   LoginInput,
   LogoutOutput,
@@ -11,6 +13,8 @@ export type {
 } from "./api";
 export {
   AuthOutputSchema,
+  ChangePasswordInputSchema,
+  ChangePasswordOutputSchema,
   CreateWorkspaceInputSchema,
   LoginInputSchema,
   LogoutOutputSchema,
@@ -33,5 +37,17 @@ export {
   UserSettingsPatchSchema,
   UserSettingsSchema,
 } from "./user";
+export type {
+  WechatAuthOutput,
+  WechatGetPhoneInput,
+  WechatLoginInput,
+  WechatUser,
+} from "./wechat";
+export {
+  WechatAuthOutputSchema,
+  WechatGetPhoneInputSchema,
+  WechatLoginInputSchema,
+  WechatUserSchema,
+} from "./wechat";
 export type { Workspace } from "./workspace";
 export { slugify, WorkspaceSchema } from "./workspace";

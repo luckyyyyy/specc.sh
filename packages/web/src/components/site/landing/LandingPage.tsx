@@ -5,6 +5,7 @@ import { HowItWorks } from "./HowItWorks";
 import { LandingCTA } from "./LandingCTA";
 import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
+import { MultiPlatform } from "./MultiPlatform";
 import { QuickStart } from "./QuickStart";
 import { TechStack } from "./TechStack";
 import { WhyNotNextjs } from "./WhyNotNextjs";
@@ -19,6 +20,7 @@ export default function LandingPage() {
         <QuickStart />
         <WhyVibeCodingFails />
         <Features />
+        <MultiPlatform />
         <WhyNotNextjs />
         <HowItWorks />
         <Highlights />

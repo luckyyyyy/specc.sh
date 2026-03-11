@@ -4,6 +4,7 @@ export const landingZh = {
     nav: {
       features: "核心优势",
       howItWorks: "工作原理",
+      multiPlatform: "全端覆盖",
       techStack: "技术栈",
       quickStart: "快速安装",
       github: "GitHub",
@@ -16,12 +17,12 @@ export const landingZh = {
       title1: "AI 负责编写",
       title2: "你只管天马行空",
       subtitle:
-        "描述你的想法，AI 负责实现——一套为 AI 而生的全栈规范模板，让你的 Claude Code / Copilot / Cursor / Codex 每次都写出生产级代码",
+        "描述你的想法，AI 负责实现——一套为 AI 而生的全栈规范模板，让你的 Claude Code / Copilot / Cursor / Codex 每次都写出生产级代码。支持网页前台、后台系统、官网 SSR、微信小程序，移动端 App 即将支持",
       ctaGithub: "Fork 模板",
       ctaLearn: "了解架构",
       techBadges: {
         typeSafe: "不耦合任何模块",
-        aiPowered: "不限 UI 框架",
+        aiPowered: "全平台一行提示词",
         fullStack: "生产级代码输出",
       },
       miu2dProof: "miu2d.com 由此模板产出",
@@ -118,16 +119,17 @@ export const landingZh = {
       monorepoComment: "# pnpm monorepo 结构",
       monorepoDescs: {
         server: "Hono + tRPC + Prisma",
-        web: "React 19 + Vite 7",
+        web: "React 19 + Vite 7（SSR + CSR）",
         types: "Zod v4 schemas",
         components: "UI 设计系统",
+        miniapp: "微信小程序 · Taro + React",
       },
     },
     // CTA
     cta: {
       title: "古法非遗编程？该翻篇了",
       subtitle:
-        "AI 时代已来，软件行业正在被彻底重构。还在一行行手写代码的人，终将被用模板 + AI 极速交付的人取代。世界正在被改写——你是旁观者，还是执笔人？",
+        "AI 时代已来，软件行业正在被彻底重构。还在一行行手写代码的人，终将被用模板 + AI 极速交付的人取代。现在已支持网页、小程序、SSR 官网，移动端 App 即将到来——世界正在被改写，你是旁观者，还是执笔人？",
       ctaGithub: "Fork 模板，立即开始",
       ctaDocs: "查看文档",
     },
@@ -299,6 +301,55 @@ export const landingZh = {
       terminalTitle: "终端安装",
       orFork: "或者直接在 GitHub 上 Fork",
       forkBtn: "Fork 模板",
+    },
+    // Multi-Platform
+    multiPlatform: {
+      badge: "全端覆盖",
+      sectionTitle: "真全端，真全栈",
+      sectionSubtitle:
+        "一套代码库，覆盖所有平台。前台、后台、官网、小程序共用同一套类型、接口和国际化资源——一行提示词，任意平台立即出功能",
+      platforms: {
+        webApp: {
+          name: "Web 前台",
+          desc: "面向用户的 Web 应用，50ms 内热更新，交互体验极速",
+          badge: "CSR",
+          tech: "React 19 + Vite 7",
+        },
+        admin: {
+          name: "后台系统",
+          desc: "权限隔离的管理控制台，角色、多租户、工作区全部内置",
+          badge: "CSR",
+          tech: "React 19 + Vite 7",
+        },
+        marketing: {
+          name: "官网 / 营销页",
+          desc: "搜索引擎友好，首屏秒开，猜你喜欢的官方名片",
+          badge: "SSR",
+          tech: "React Router v7 + Hono",
+        },
+        miniapp: {
+          name: "微信小程序",
+          desc: "原生小程序体验，共享 tRPC 接口和 Zod 类型，不需重复定义",
+          badge: "原生",
+          tech: "Taro + React",
+        },
+        mobileApp: {
+          name: "移动端 App",
+          desc: "iOS & Android 原生应用，兼容同一套后端服务",
+          badge: "即将支持",
+          tech: "敬请期待",
+        },
+      },
+      sharedTitle: "所有平台共享同一套基础",
+      sharedSubtitle: "不是共享“部分”，而是共享“全部”",
+      sharedItems: {
+        types: "Zod v4 类型",
+        trpc: "tRPC 接口",
+        i18n: "国际化资源",
+        auth: "认证逻辑",
+        business: "业务逻辑",
+      },
+      onePrompt: "一行提示词，任意平台立即出功能",
     },
     // Footer
     footer: {

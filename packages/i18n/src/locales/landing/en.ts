@@ -6,6 +6,7 @@ export const landingEn: LandingSchema = {
     nav: {
       features: "Why This Template",
       howItWorks: "How it Works",
+      multiPlatform: "All Platforms",
       techStack: "Tech Stack",
       quickStart: "Quick Start",
       github: "GitHub",
@@ -18,12 +19,12 @@ export const landingEn: LandingSchema = {
       title1: "Your AI Writes",
       title2: "You Ship",
       subtitle:
-        "Describe your idea. AI handles the rest. — A full-stack spec template for AI, making your Claude Code / Copilot / Cursor / Codex produce production-grade code every time",
+        "Describe your idea. AI handles the rest. — A full-stack spec template for AI, making your Claude Code / Copilot / Cursor / Codex produce production-grade code every time. Supports web frontend, admin dashboard, SSR marketing site, WeChat Mini-Program, with mobile app support coming soon",
       ctaGithub: "Fork Template",
       ctaLearn: "Explore Architecture",
       techBadges: {
         typeSafe: "Zero Module Coupling",
-        aiPowered: "Any UI Framework",
+        aiPowered: "Any Platform, One Prompt",
         fullStack: "Production-Grade Output",
       },
       miu2dProof: "miu2d.com was built with this template",
@@ -121,16 +122,17 @@ export const landingEn: LandingSchema = {
       monorepoComment: "# pnpm monorepo structure",
       monorepoDescs: {
         server: "Hono + tRPC + Prisma",
-        web: "React 19 + Vite 7",
+        web: "React 19 + Vite 7 (SSR + CSR)",
         types: "Zod v4 schemas",
         components: "UI design system",
+        miniapp: "WeChat Mini-Program · Taro + React",
       },
     },
     // CTA
     cta: {
       title: "Artisan Hand-Coding? That Era Is Over",
       subtitle:
-        "The AI era is here — the software industry is being completely restructured. Those still handwriting every line will be replaced by those shipping with templates + AI. The world is being rewritten — are you watching, or are you writing?",
+        "The AI era is here — the software industry is being completely restructured. Those still handwriting every line will be replaced by those shipping with templates + AI. Now supporting web, mini-program, SSR marketing sites, with mobile app coming soon. The world is being rewritten — are you watching, or are you writing?",
       ctaGithub: "Fork Template, Start Now",
       ctaDocs: "View Docs",
     },
@@ -304,6 +306,55 @@ export const landingEn: LandingSchema = {
       terminalTitle: "Terminal",
       orFork: "Or fork directly on GitHub",
       forkBtn: "Fork Template",
+    },
+    // Multi-Platform
+    multiPlatform: {
+      badge: "Full-Platform Coverage",
+      sectionTitle: "Truly Full-Platform. Truly Full-Stack.",
+      sectionSubtitle:
+        "One codebase. Every platform. Web app, admin panel, marketing site, and mini-program all share the same types, APIs, and i18n — one prompt ships a feature on any platform",
+      platforms: {
+        webApp: {
+          name: "Web Frontend",
+          desc: "User-facing web app — sub-50ms HMR, instant interactions, zero SSR overhead",
+          badge: "CSR",
+          tech: "React 19 + Vite 7",
+        },
+        admin: {
+          name: "Admin Dashboard",
+          desc: "Auth-gated management console with roles, multi-tenant workspaces, all built-in",
+          badge: "CSR",
+          tech: "React 19 + Vite 7",
+        },
+        marketing: {
+          name: "Marketing Site",
+          desc: "SEO-indexed, instant first paint — search engines crawl it, users trust it",
+          badge: "SSR",
+          tech: "React Router v7 + Hono",
+        },
+        miniapp: {
+          name: "WeChat Mini-Program",
+          desc: "Native mini-program experience sharing tRPC APIs and Zod types — zero duplication",
+          badge: "Native",
+          tech: "Taro + React",
+        },
+        mobileApp: {
+          name: "Mobile App",
+          desc: "iOS & Android native app, compatible with the same backend services",
+          badge: "Coming Soon",
+          tech: "Stay tuned",
+        },
+      },
+      sharedTitle: "Every Platform Shares the Same Foundation",
+      sharedSubtitle: 'Not sharing "part" of it — sharing all of it',
+      sharedItems: {
+        types: "Zod v4 Types",
+        trpc: "tRPC APIs",
+        i18n: "i18n Resources",
+        auth: "Auth Logic",
+        business: "Business Logic",
+      },
+      onePrompt: "One prompt. Any platform. Instant feature.",
     },
     // Footer
     footer: {

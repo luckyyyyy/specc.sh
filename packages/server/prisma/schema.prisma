@@ -71,3 +71,33 @@ model WorkspaceMember {
   @@unique([workspaceId, userId], name: "workspace_members_workspace_user_uidx")
   @@map("workspace_members")
 }
+
+/// WeChat Mini Program users — stored separately from the main User table.
+model WechatUser {
+  id          String   @id @default(uuid())
+  openid      String   @unique
+  unionid     String?
+  phoneNumber String?  @map("phone_number")
+  name        String?
+  avatarKey   String?  @map("avatar_key")
+  settings    Json?
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  sessions WechatSession[]
+
+  @@map("wechat_users")
+}
+
+model WechatSession {
+  id           String     @id @default(uuid())
+  wechatUserId String     @map("wechat_user_id")
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  expiresAt    DateTime   @map("expires_at") @db.Timestamptz
+
+  wechatUser WechatUser @relation(fields: [wechatUserId], references: [id])
+
+  @@index([wechatUserId], name: "wechat_sessions_user_id_idx")
+  @@index([expiresAt], name: "wechat_sessions_expires_at_idx")
+  @@map("wechat_sessions")
+}

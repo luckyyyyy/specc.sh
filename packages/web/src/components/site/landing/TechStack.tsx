@@ -186,6 +186,11 @@ export function TechStack() {
                 color: "text-pink-400",
                 descKey: "components" as const,
               },
+              {
+                path: "packages/miniapp",
+                color: "text-violet-400",
+                descKey: "miniapp" as const,
+              },
             ].map((m) => (
               <div key={m.path}>
                 <span className={m.color}>{m.path}</span>

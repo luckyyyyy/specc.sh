@@ -7,6 +7,9 @@
 **Your AI Writes**
 **You Ship**
 
+**Web · Admin · Marketing Site · WeChat Mini-Program**
+*One prompt. Any platform. Mobile App coming soon.*
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Demo](https://img.shields.io/badge/Demo-specc.sh-green)](https://specc.sh)
 
@@ -82,7 +85,8 @@ A production-ready TypeScript monorepo — batteries included:
 specc.sh/
 ├── packages/
 │   ├── server/        # Hono + tRPC + Prisma + PostgreSQL 18
-│   ├── web/           # React 19 + Vite 7 + TailwindCSS 4
+│   ├── web/           # React 19 + Vite 7 + TailwindCSS 4 (SSR + CSR)
+│   ├── miniapp/       # WeChat Mini-Program · Taro + React
 │   ├── types/         # Shared Zod v4 schemas
 │   ├── components/    # UI design system
 │   └── i18n/          # EN + ZH out of the box
@@ -91,6 +95,20 @@ specc.sh/
 └── .github/
     └── copilot-instructions.md   ← Architecture rules, not docs
 ```
+
+### One Template, Every Platform
+
+| Platform | Technology | Rendering |
+|----------|-----------|----------|
+| **Web Frontend** | React 19 + Vite 7 | CSR — instant HMR, <50ms dev feedback |
+| **Admin Dashboard** | React 19 + Vite 7 | CSR — auth-gated SPA |
+| **Marketing / Landing Site** | React Router v7 + Hono | SSR — SEO-indexed, first paint instant |
+| **WeChat Mini-Program** | Taro + React | Native mini-program, shared tRPC + types |
+| **Mobile App** | *(coming soon)* | — |
+
+All platforms share the same Zod type schemas, tRPC procedures, and i18n resources. **One prompt ships any platform feature.**
+
+---
 
 ### Everything pre-wired, so you just describe features:
 
@@ -102,6 +120,8 @@ specc.sh/
 | **i18n** | EN / ZH, add more locales with zero component changes |
 | **Dark / Light / System Theme** | CSS variable-driven |
 | **End-to-End Type Safety** | tRPC + Zod — compiler catches AI mistakes instantly |
+| **WeChat Mini-Program** | Taro + React, shares types + tRPC with the web app |
+| **SSR + CSR Hybrid** | Marketing site runs SSR; dashboard runs CSR — same codebase |
 
 ---
 
@@ -247,7 +267,8 @@ cp packages/web/.env.example packages/web/.env
 |-------|-----------|
 | Backend | [Hono](https://hono.dev/) + [tRPC v11](https://trpc.io/) |
 | Database | PostgreSQL 18 + [Prisma ORM](https://www.prisma.io/) |
-| Frontend | React 19 + [Vite 7](https://vite.dev/) |
+| Frontend (Web) | React 19 + [Vite 7](https://vite.dev/) — SSR + CSR hybrid |
+| Mini-Program | [Taro](https://taro.js.org/) + React — WeChat native |
 | Styling | TailwindCSS 4 |
 | Validation | Zod v4 |
 | Storage | MinIO (S3-compatible) |

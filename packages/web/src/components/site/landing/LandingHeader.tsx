@@ -132,7 +132,13 @@ export function LandingHeader() {
           {/* Center nav */}
           <nav className="hidden md:flex items-center gap-1">
             {(
-              ["features", "howItWorks", "techStack", "quickStart"] as const
+              [
+                "features",
+                "howItWorks",
+                "multiPlatform",
+                "techStack",
+                "quickStart",
+              ] as const
             ).map((key) => (
               <button
                 key={key}

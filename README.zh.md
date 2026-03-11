@@ -7,6 +7,9 @@
 **AI 来写**
 **你来发布**
 
+**网页前台 · 后台系统 · 官网 · 微信小程序**
+*一行提示词，搞定任意平台功能。移动端 App 即将推出。*
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Demo](https://img.shields.io/badge/Demo-specc.sh-green)](https://specc.sh)
 
@@ -82,7 +85,8 @@ make dev    # 启动所有服务
 specc.sh/
 ├── packages/
 │   ├── server/        # Hono + tRPC + Prisma + PostgreSQL 18
-│   ├── web/           # React 19 + Vite 7 + TailwindCSS 4
+│   ├── web/           # React 19 + Vite 7 + TailwindCSS 4（SSR + CSR）
+│   ├── miniapp/       # 微信小程序 · Taro + React
 │   ├── types/         # 共享 Zod v4 Schema
 │   ├── components/    # UI 设计系统
 │   └── i18n/          # 中英双语开箱即用
@@ -102,6 +106,8 @@ specc.sh/
 | **国际化 i18n** | 中 / 英双语，新增语言无需改组件 |
 | **深色 / 浅色 / 跟随系统主题** | CSS 变量驱动 |
 | **端到端类型安全** | tRPC + Zod，编译器即时捕获 AI 错误 |
+| **微信小程序** | Taro + React，与 Web 端共享类型 + tRPC |
+| **SSR + CSR 混合渲染** | 官网走 SSR，控制台走 CSR，同一份代码库 |
 
 ---
 
@@ -247,7 +253,8 @@ cp packages/web/.env.example packages/web/.env
 |------|------|
 | 后端 | [Hono](https://hono.dev/) + [tRPC v11](https://trpc.io/) |
 | 数据库 | PostgreSQL 18 + [Prisma ORM](https://www.prisma.io/) |
-| 前端 | React 19 + [Vite 7](https://vite.dev/) |
+| 前端（Web） | React 19 + [Vite 7](https://vite.dev/) — SSR + CSR 混合 |
+| 小程序 | [Taro](https://taro.js.org/) + React — 微信原生 |
 | 样式 | TailwindCSS 4 |
 | 校验 | Zod v4 |
 | 存储 | MinIO（S3 兼容） |

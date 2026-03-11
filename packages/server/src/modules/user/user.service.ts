@@ -3,6 +3,7 @@ import { db } from "@/db/client";
 import { Prisma, type User } from "@/generated/prisma/client/client";
 import { type Language } from "@/i18n";
 import { AppError } from "@/trpc/errors";
+import { hashPassword, verifyPassword } from "@/utils/password";
 
 export class UserService {
   async create(
@@ -121,6 +122,24 @@ export class UserService {
       data: { settings: nextSettings },
     });
     return { updated, previousValue };
+  }
+
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+    language: Language,
+  ) {
+    const user = await db.user.findUnique({ where: { id: userId } });
+    if (!user) throw AppError.notFound(language, "errors.user.notFound");
+    const valid = await verifyPassword(currentPassword, user.passwordHash);
+    if (!valid)
+      throw AppError.badRequest(language, "errors.auth.invalidCredentials");
+    const newHash = await hashPassword(newPassword);
+    await db.user.update({
+      where: { id: userId },
+      data: { passwordHash: newHash },
+    });
   }
 }
 

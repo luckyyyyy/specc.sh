@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* 声明扫描路径，确保原子类被收集 */
+@source "../src/**/*.{tsx,jsx}";
+
+/* ─── Design Tokens ─────────────────────────────────────── */
+@theme {
+  /* Brand */
+  --color-primary: #1677ff;
+  --color-wechat: #07c160;
+  --color-destructive: #ff3b30;
+  --color-icon-blue: #007aff;
+  --color-icon-green: #34c759;
+  --color-icon-gray: #8e8e93;
+
+  /* Surfaces */
+  --color-surface: #f2f2f7;
+  --color-surface-alt: #f7f8fa;
+  --color-card: #ffffff;
+  --color-input: #f2f2f7;
+
+  /* Foreground / Text */
+  --color-fg: #000000;
+  --color-fg-secondary: #6d6d73;
+  --color-fg-muted: #888888;
+  --color-fg-subtle: #555555;
+  --color-placeholder: #bbbbbb;
+
+  /* Borders */
+  --color-divider: #e5e5ea;
+  --color-divider-input: #e0e0e0;
+  --color-tab-border: #e5e7eb;
+
+  /* Tabs */
+  --color-tab-active: #1677ff;
+  --color-tab-inactive: #9ca3af;
+}
+
+/* ─── Dark Mode Overrides ───────────────────────────────── */
+/* Applied via .dark class on the root View of each page */
+.dark {
+  --color-surface: #000000;
+  --color-surface-alt: #1a1a1a;
+  --color-card: #1c1c1e;
+  --color-input: #2c2c2e;
+
+  --color-fg: #ffffff;
+  --color-fg-secondary: #8e8e93;
+  --color-fg-muted: #999999;
+  --color-fg-subtle: #aaaaaa;
+  --color-placeholder: #666666;
+
+  --color-divider: #38383a;
+  --color-divider-input: #3a3a3a;
+  --color-tab-border: #38383a;
+}

@@ -5,6 +5,7 @@
 import { db } from "@/db/client";
 
 export const SESSION_COOKIE_NAME = "SESSION_ID";
+export const WECHAT_SESSION_COOKIE_NAME = "WECHAT_SESSION_ID";
 const SESSION_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
 export const getCookieValue = (
@@ -34,19 +35,39 @@ export const resolveSessionUserId = async (
   return session?.userId;
 };
 
-const buildCookieHeader = (value: string, maxAge: number): string => {
+/**
+ * Resolve wechatUserId from a wechat session ID string.
+ * Returns undefined when the session is missing, invalid, or expired.
+ */
+export const resolveWechatSessionUserId = async (
+  sessionId: string | undefined,
+): Promise<string | undefined> => {
+  if (!sessionId) return undefined;
+  const session = await db.wechatSession.findFirst({
+    where: { id: sessionId, expiresAt: { gt: new Date() } },
+    select: { wechatUserId: true },
+  });
+  return session?.wechatUserId;
+};
+
+const buildCookieHeader = (
+  name: string,
+  value: string,
+  maxAge: number,
+): string => {
   // Production: API and Web may be on different domains — SameSite=None + Secure is required
   // for cross-origin requests (e.g. credentials: "include"). Development keeps Lax (no HTTPS).
   const isProduction = process.env.NODE_ENV === "production";
   const secure = isProduction ? "; Secure" : "";
   const sameSite = isProduction ? "None" : "Lax";
-  return `${SESSION_COOKIE_NAME}=${value}; HttpOnly; SameSite=${sameSite}; Max-Age=${maxAge}; Path=/${secure}`;
+  return `${name}=${value}; HttpOnly; SameSite=${sameSite}; Max-Age=${maxAge}; Path=/${secure}`;
 };
 
 export const setSessionCookie = (resHeaders: Headers, sessionId: string) => {
   resHeaders.append(
     "Set-Cookie",
     buildCookieHeader(
+      SESSION_COOKIE_NAME,
       encodeURIComponent(sessionId),
       SESSION_COOKIE_MAX_AGE_SECONDS,
     ),
@@ -54,5 +75,29 @@ export const setSessionCookie = (resHeaders: Headers, sessionId: string) => {
 };
 
 export const clearSessionCookie = (resHeaders: Headers) => {
-  resHeaders.append("Set-Cookie", buildCookieHeader("", 0));
+  resHeaders.append(
+    "Set-Cookie",
+    buildCookieHeader(SESSION_COOKIE_NAME, "", 0),
+  );
+};
+
+export const setWechatSessionCookie = (
+  resHeaders: Headers,
+  sessionId: string,
+) => {
+  resHeaders.append(
+    "Set-Cookie",
+    buildCookieHeader(
+      WECHAT_SESSION_COOKIE_NAME,
+      encodeURIComponent(sessionId),
+      SESSION_COOKIE_MAX_AGE_SECONDS,
+    ),
+  );
+};
+
+export const clearWechatSessionCookie = (resHeaders: Headers) => {
+  resHeaders.append(
+    "Set-Cookie",
+    buildCookieHeader(WECHAT_SESSION_COOKIE_NAME, "", 0),
+  );
 };

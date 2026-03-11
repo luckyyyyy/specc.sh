@@ -180,7 +180,6 @@ export function WhyVibeCodingFails() {
             {t("landing.whyVibeFails.solution")}
           </p>
         </motion.div>
-
       </div>
     </section>
   );

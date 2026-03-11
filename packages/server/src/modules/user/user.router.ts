@@ -1,4 +1,9 @@
-import { UserProfileOutputSchema, UserUpdateInputSchema } from "@specc/types";
+import {
+  ChangePasswordInputSchema,
+  ChangePasswordOutputSchema,
+  UserProfileOutputSchema,
+  UserUpdateInputSchema,
+} from "@specc/types";
 import { z } from "zod";
 import { storage } from "@/storage/index";
 import { AppError } from "@/trpc/errors";
@@ -41,5 +46,18 @@ export const userRouter = router({
         storage.deleteFile(previousAvatarKey).catch(() => {});
       }
       return toUserOutput(updated);
+    }),
+
+  changePassword: protectedProcedure
+    .input(ChangePasswordInputSchema)
+    .output(ChangePasswordOutputSchema)
+    .mutation(async ({ input, ctx }) => {
+      await userService.changePassword(
+        ctx.userId,
+        input.currentPassword,
+        input.newPassword,
+        ctx.language,
+      );
+      return { success: true };
     }),
 });

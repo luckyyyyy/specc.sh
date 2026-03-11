@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["ES2017", "DOM"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
+    "paths": {
+      "@/*": ["./src/*", "../server/src/*"],
+      "@specc/server/trpc": ["../server/src/trpc/router.ts"]
+    },
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true
+  },
+  "include": ["src", "types", "config", "babel.config.js"],
+  "exclude": ["node_modules", "dist"]
+}
