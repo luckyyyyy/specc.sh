@@ -3,15 +3,15 @@
   "private": true,
   "packageManager": "pnpm@10.15.1",
   "scripts": {
-    "dev": "concurrently \"pnpm -C packages/i18n dev\" \"pnpm -C packages/types dev\" \"pnpm -C packages/components dev\" \"pnpm -C packages/server dev\" \"pnpm -C packages/web dev\" \"pnpm -C packages/miniapp dev\"",
-    "dev:web": "pnpm -C packages/web dev",
-    "dev:server": "pnpm -C packages/server dev",
-    "dev:miniapp": "pnpm -C packages/miniapp dev",
-    "build": "pnpm -C packages/server build && pnpm -C packages/web build",
-    "build:miniapp": "pnpm -C packages/miniapp build",
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter @specc/web",
+    "dev:server": "turbo run dev --filter @specc/server",
+    "dev:miniapp": "turbo run dev --filter @specc/miniapp",
+    "build": "turbo run build --filter @specc/server --filter @specc/web",
+    "build:miniapp": "turbo run build --filter @specc/miniapp",
     "lint": "biome check .",
     "format": "biome format . --write",
-    "typecheck": "pnpm -r --parallel run typecheck",
+    "typecheck": "turbo run typecheck",
     "check": "pnpm lint && pnpm typecheck",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
@@ -19,6 +19,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
-    "concurrently": "^9.2.1"
+    "turbo": "2.8.17"
   }
 }
